@@ -4,7 +4,7 @@ const BRAND_SHORT = 'PMM';
 export function getAppUrl() {
 	return (
 		process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ??
-		'https://app.promirromarket.com'
+		'https://app.primemirromarket.com'
 	);
 }
 
@@ -16,7 +16,7 @@ export function getSupportEmail() {
 	return (
 		process.env.EMAIL_SUPPORT ??
 		process.env.EMAIL_FROM ??
-		'support@promirromarket.com'
+		'support@primemirromarket.com'
 	);
 }
 
