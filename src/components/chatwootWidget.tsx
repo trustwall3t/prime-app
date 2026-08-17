@@ -12,7 +12,7 @@ export default function ChatwootWidget() {
 				dangerouslySetInnerHTML={{
 					__html: `
             window._smartsupp = window._smartsupp || {};
-            window._smartsupp.key = '';
+            window._smartsupp.key = '09b35ca3f427bdf332eef8c55fa11d9d21954042';
             window.smartsupp||(function(d) {
               var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
               s=d.getElementsByTagName('script')[0];c=d.createElement('script');
@@ -24,7 +24,11 @@ export default function ChatwootWidget() {
 			/>
 			<noscript>
 				Powered by{' '}
-				<a href='https://www.smartsupp.com' target='_blank' rel='noreferrer'>
+				<a
+					href='https://www.smartsupp.com'
+					target='_blank'
+					rel='noreferrer'
+				>
 					Smartsupp
 				</a>
 			</noscript>

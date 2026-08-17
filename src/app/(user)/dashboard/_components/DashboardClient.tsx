@@ -31,6 +31,8 @@ interface DashboardClientProps {
 	ranking: RankProgress;
 	nextRankName: string;
 	activeCopy: ActiveCopy | null;
+	totalWithdrawals: number;
+	tradeInterest: number;
 }
 
 function formatCurrency(n: number): string {
@@ -41,7 +43,14 @@ function winRateStars(winRate: number): number {
 	return Math.min(5, Math.max(1, Math.round(winRate / 20)));
 }
 
-const DashboardClient = ({ user, ranking, nextRankName, activeCopy }: DashboardClientProps) => {
+const DashboardClient = ({
+	user,
+	ranking,
+	nextRankName,
+	activeCopy,
+	totalWithdrawals,
+	tradeInterest,
+}: DashboardClientProps) => {
 	const [openWallet, setOpenWallet] = React.useState(false);
 	return (
 		<div className='flex flex-col gap-4  w-full'>
@@ -165,7 +174,7 @@ const DashboardClient = ({ user, ranking, nextRankName, activeCopy }: DashboardC
 									Total withdrawal
 								</p>
 								<p className='text-white font-semibold text-lg'>
-									${formatMoney(user.investmentBalance)}
+									${formatMoney(totalWithdrawals)}
 								</p>
 							</div>
 						</div>
@@ -178,7 +187,7 @@ const DashboardClient = ({ user, ranking, nextRankName, activeCopy }: DashboardC
 									Trade interest
 								</p>
 								<p className='text-white font-semibold text-lg'>
-									${formatMoney(user.investmentBalance)}
+									${formatMoney(tradeInterest)}
 								</p>
 							</div>
 						</div>

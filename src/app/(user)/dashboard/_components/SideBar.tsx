@@ -56,7 +56,7 @@ const SideBar = () => {
 		{
 			label: ' Withdrawal',
 			icon: <WithdrawIcon />,
-			href: '/dashboard/withdrawal',
+			href: '/dashboard/withdraw',
 		},
 		{
 			label: 'Copy Traders',

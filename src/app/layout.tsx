@@ -11,14 +11,14 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-	title: 'Prime Ventures Ltd - Welcome | Regulated Broker in Copy Trading, Trade with Zero Spreads',
+	title: 'prime Mirror Market - Welcome | Regulated Broker in Copy Trading, Trade with Zero Spreads',
 	description:
-		'Prim Ventures Ltd is a regulated broker in copy trading, trade with zero spreads',
-	authors: [{ name: 'Prim Ventures Ltd' }],
+		'prime Mirror Market is a regulated broker in copy trading, trade with zero spreads',
+	authors: [{ name: 'prime Mirror Market' }],
 	openGraph: {
-		title: 'Prime Ventures Ltd - Welcome | Regulated Broker in Copy Trading, Trade with Zero Spreads',
+		title: 'Prime Mirror Market  - Welcome | Regulated Broker in Copy Trading, Trade with Zero Spreads',
 		description:
-			'Prime Ventures Ltd is a regulated broker in copy trading, trade with zero spreads',
+			'prime Mirror Market is a regulated broker in copy trading, trade with zero spreads',
 		images: ['/logo.png'],
 	},
 };

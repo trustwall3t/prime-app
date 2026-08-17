@@ -1,27 +1,23 @@
-import { WithdrawButton } from './withdraw-button';
-
+import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/session';
-import { formatMoney } from '@/lib/money';
+import WithdrawFlow from './WithdrawFlow';
 
-const Withdraw = async () => {
+export default async function WithdrawPage() {
 	const session = await getSession();
+	if (!session?.user) redirect('/login');
+
+	const user = session.user;
 
 	return (
-		<div>
-			<div className='p-10 bg-black text-white rounded-lg flex flex-col gap-4 items-center justify-center'>
-				<h1 className='text-2xl font-bold'>Account Balance</h1>
-				<p className='text-4xl font-bold bg-green-500 rounded-lg p-2 px-5'>
-					${formatMoney(session?.user?.walletBalance)}
-				</p>
-				<WithdrawButton
-					id={session?.user?.id || ''}
-					ethAddress={session?.user?.ethAddress || ''}
-					usdtAddress={session?.user?.usdtAddress || ''}
-					btcAddress={session?.user?.btcAddress || ''}
-				/>
-			</div>
-		</div>
+		<WithdrawFlow
+			user={{
+				id: user.id,
+				walletBalance: user.walletBalance ?? 0,
+				isVerified: user.isVerified ?? false,
+				btcAddress: user.btcAddress,
+				ethAddress: user.ethAddress,
+				usdtAddress: user.usdtAddress,
+			}}
+		/>
 	);
-};
-
-export default Withdraw;
+}
