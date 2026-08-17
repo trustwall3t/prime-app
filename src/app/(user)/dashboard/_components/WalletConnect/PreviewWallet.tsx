@@ -3,9 +3,6 @@
 import {
 	ChevronRight,
 	X,
-	ArrowLeft,
-	Loader,
-	CheckCircle,
 	AlertCircle,
 	Lock,
 } from 'lucide-react';
@@ -13,7 +10,15 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { connectWallet } from '@/actions/user/walletConnect';
-import { dashboardModalTitleClass, dashboardSectionTitleClass } from '@/lib/userFormStyles';
+import {
+	dashboardCardTitleClass,
+	dashboardModalTitleClass,
+	dashboardSectionTitleClass,
+	userInputClass,
+	userPrimaryButtonClass,
+	userSecondaryButtonClass,
+} from '@/lib/userFormStyles';
+import { cn } from '@/lib/utils';
 
 const PreviewWallet = ({
 	open,
@@ -114,35 +119,37 @@ const PreviewWallet = ({
 		setFailureReason('');
 	};
 
+	if (!open) return null;
+
 	return (
 		<div
-			className={
-				open
-					? 'w-full h-screen fixed left-0 right-0 top-0 bg-black/40 flex items-center justify-center z-50'
-					: 'hidden'
-			}
+			className='fixed inset-0 z-[60] flex items-end justify-center bg-black/80 p-3 pb-24 backdrop-blur-sm sm:items-center sm:p-4 sm:pb-4'
 			onClick={() => setOpen(false)}
 		>
 			<div
-				className='bg-zinc-900 border border-zinc-700 w-[98%] sm:w-[420px] rounded-lg p-6 relative'
+				className='relative flex max-h-[88vh] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl sm:max-h-[92vh]'
 				onClick={(e) => e.stopPropagation()}
 			>
-				{/* Close button positioned absolutely */}
-				<button
-					onClick={() => {
-						setOpen(false);
-						setLoadingWallet(null);
-						setConnectedWallet(null);
-						setShowSeedForm(false);
-						setConnectionFailed(false);
-						setFailureReason('');
-					}}
-					className='absolute top-4 right-4 z-10'
-				>
-					<X className='w-6 h-6 text-gray-400 hover:text-gray-200 transition' />
-				</button>
+				<div className='flex shrink-0 items-center justify-between border-b border-zinc-800 px-4 py-3 sm:px-5 sm:py-4'>
+					<p className='text-sm font-medium text-gray-400'>Connect wallet</p>
+					<button
+						type='button'
+						onClick={() => {
+							setOpen(false);
+							setLoadingWallet(null);
+							setConnectedWallet(null);
+							setShowSeedForm(false);
+							setConnectionFailed(false);
+							setFailureReason('');
+						}}
+						className='rounded-lg p-1.5 text-gray-400 transition hover:bg-zinc-800 hover:text-white'
+						aria-label='Close'
+					>
+						<X className='h-5 w-5' />
+					</button>
+				</div>
 
-				<div className='mt-2'>
+				<div className='flex-1 overflow-y-auto px-4 py-4 sm:px-5 sm:py-6'>
 					{/* Loading State */}
 					{loadingWallet && !connectedWallet && !showSeedForm && (
 						<LoadingScreen
@@ -184,7 +191,15 @@ const PreviewWallet = ({
 					{/* Initial Wallet List */}
 					{!loadingWallet && !connectedWallet && !showSeedForm && (
 						<>
-							<div className='space-y-3 my-6'>
+							<div className='mb-4 space-y-1'>
+								<h2 className={dashboardModalTitleClass}>
+									Choose a wallet
+								</h2>
+								<p className='text-xs text-gray-400 sm:text-sm'>
+									Select a provider to connect your wallet securely.
+								</p>
+							</div>
+							<div className='space-y-2.5 sm:space-y-3'>
 								{wallets.map((wallet) => (
 									<Wallets
 										key={wallet.name}
@@ -195,8 +210,8 @@ const PreviewWallet = ({
 									/>
 								))}
 							</div>
-							<div className='mt-8'>
-								<p className='text-center text-gray-400 text-xs leading-relaxed'>
+							<div className='mt-5 sm:mt-6'>
+								<p className='text-center text-[11px] leading-relaxed text-gray-500 sm:text-xs'>
 									By connecting a wallet, you agree to our{' '}
 									<a
 										href=''
@@ -230,9 +245,9 @@ const LoadingScreen = ({
 	imageurl: string;
 }) => {
 	return (
-		<div className='flex flex-col items-center justify-center py-16'>
-			<div className='mb-8'>
-				<div className='relative w-20 h-20'>
+		<div className='flex flex-col items-center justify-center py-8 sm:py-12'>
+			<div className='mb-6 sm:mb-8'>
+				<div className='relative h-16 w-16 sm:h-20 sm:w-20'>
 					<svg
 						className='absolute inset-0 w-full h-full'
 						viewBox='0 0 100 100'
@@ -283,7 +298,7 @@ const LoadingScreen = ({
 			<h2 className={`${dashboardModalTitleClass} mb-2 text-center`}>
 				Connecting to {walletName}
 			</h2>
-			<p className='text-gray-400 text-sm text-center mb-8'>
+			<p className='mb-6 max-w-xs text-center text-xs text-gray-400 sm:mb-8 sm:text-sm'>
 				Please wait while we establish a secure connection...
 			</p>
 
@@ -319,42 +334,45 @@ const ConnectionFailed = ({
 	onTryAnother: () => void;
 }) => {
 	return (
-		<div className='flex flex-col items-center py-8'>
-			<div className='rounded-full bg-red-500/10 flex items-center justify-center w-16 h-16 mb-5 border border-red-500/30'>
-				<AlertCircle className='w-8 h-8 text-red-400' />
+		<div className='flex flex-col items-center py-2 sm:py-4'>
+			<div className='mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-red-500/30 bg-red-500/10 sm:mb-5 sm:h-16 sm:w-16'>
+				<AlertCircle className='h-7 w-7 text-red-400 sm:h-8 sm:w-8' />
 			</div>
 
-			<div className='rounded-full bg-zinc-800/50 flex items-center justify-center w-20 h-20 mb-5 border border-zinc-700'>
+			<div className='mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-zinc-700 bg-zinc-800/50 sm:mb-5 sm:h-20 sm:w-20'>
 				<Image
 					src={imageurl}
 					width={44}
 					height={44}
 					alt={walletName}
+					className='h-10 w-10 sm:h-11 sm:w-11'
 				/>
 			</div>
 
-			<h2 className={`${dashboardModalTitleClass} mb-2 text-center`}>
+			<h2 className={`${dashboardModalTitleClass} mb-2 max-w-xs text-center`}>
 				{walletName} connection failed
 			</h2>
-			<p className='text-gray-400 text-center text-sm mb-6 px-2 leading-relaxed'>
+			<p className='mb-4 max-w-sm px-1 text-center text-xs leading-relaxed text-gray-400 sm:mb-6 sm:text-sm'>
 				We could not connect to your wallet automatically.
 			</p>
 
-			<div className='w-full bg-red-500/10 border border-red-500/25 rounded-lg p-4 mb-6'>
-				<p className='text-red-200 text-sm leading-relaxed'>{reason}</p>
+			<div className='mb-5 w-full rounded-xl border border-red-500/25 bg-red-500/10 p-3 sm:mb-6 sm:p-4'>
+				<p className='text-xs leading-relaxed text-red-200 sm:text-sm'>{reason}</p>
 			</div>
 
-			<div className='w-full flex items-center gap-3'>
+			<div className='flex w-full flex-col gap-2.5 sm:flex-row sm:gap-3'>
 				<button
+					type='button'
 					onClick={onManualConnect}
-					className='w-1/2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition'
+					className={cn(userPrimaryButtonClass, 'sm:flex-1')}
 				>
 					Connect manually
 				</button>
 
 				<button
+					type='button'
 					onClick={onTryAnother}
-					className='w-1/2 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-3 rounded-lg border border-zinc-600 transition'
+					className={cn(userSecondaryButtonClass, 'w-full py-3 sm:flex-1')}
 				>
 					Try a different wallet
 				</button>
@@ -469,93 +487,91 @@ const SeedPhraseForm = ({
 	};
 
 	return (
-		<div className='flex flex-col py-4'>
-			<div className='flex items-center justify-center mb-4'>
-				<div className='rounded-lg bg-zinc-800 flex items-center justify-center w-16 h-16 border border-zinc-700'>
+		<div className='flex flex-col py-1 sm:py-2'>
+			<div className='mb-4 flex items-center justify-center'>
+				<div className='flex h-14 w-14 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800 sm:h-16 sm:w-16'>
 					<Image
 						src={imageurl}
 						width={40}
 						height={40}
 						alt={walletName}
+						className='h-9 w-9 sm:h-10 sm:w-10'
 					/>
 				</div>
 			</div>
 
 			<h2 className={`${dashboardSectionTitleClass} mb-2 text-center`}>
-				Enter Passphrase
+				Enter passphrase
 			</h2>
-			<p className='text-gray-400 text-center text-sm mb-8 px-2'>
-				{walletName} — Enter your wallet passphrase to continue
+			<p className='mb-5 max-w-sm px-1 text-center text-xs text-gray-400 sm:mb-6 sm:text-sm'>
+				{walletName} — enter your wallet passphrase to continue
 			</p>
 
-			<div className='mb-4'>
-				<label className='block text-white font-semibold mb-4 text-base'>
-					Wallet Passphrase
+			<div className='mb-3 sm:mb-4'>
+				<label
+					htmlFor='wallet-passphrase'
+					className='mb-2 block text-sm font-medium text-gray-300'
+				>
+					Wallet passphrase
 				</label>
 
 				<textarea
+					id='wallet-passphrase'
 					value={seedInput}
 					onChange={(e) => setSeedInput(e.target.value)}
 					onBlur={() => setTouched(true)}
 					onFocus={() => setTouched(true)}
 					placeholder='Enter your wallet passphrase or recovery phrase...'
-					className='w-full h-32 bg-zinc-800 border border-zinc-600 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none text-sm'
+					className={cn(userInputClass, 'h-28 resize-none sm:h-32')}
 				/>
 			</div>
 
-			{/* Requirement Text */}
-			<p className='text-gray-400 text-sm mb-6'>
+			<p className='mb-4 text-xs text-gray-400 sm:mb-5 sm:text-sm'>
 				Your passphrase must be at least 12 characters long
 			</p>
 
-			{/* Security Notice */}
-			<div className='bg-zinc-800/50 border border-zinc-700 rounded-lg p-4 mb-8 flex items-start gap-3'>
-				<Lock fill='gray' className='w-5 h-5 text-gray-300 mt-0.5 flex-shrink-0' />
+			<div className='mb-5 flex items-start gap-3 rounded-xl border border-zinc-700 bg-zinc-800/50 p-3 sm:mb-6 sm:p-4'>
+				<Lock className='mt-0.5 h-4 w-4 shrink-0 text-gray-300 sm:h-5 sm:w-5' />
 				<div>
-					<p className='text-white font-semibold text-sm mb-1'>
-						Security Notice:
+					<p className='mb-1 text-xs font-semibold text-white sm:text-sm'>
+						Security notice
 					</p>
-					<p className='text-gray-400 text-sm'>
+					<p className='text-xs text-gray-400 sm:text-sm'>
 						Your connection will be submitted for verification.
 					</p>
 				</div>
 			</div>
 
-			{/* Validation Messages */}
 			{showValidation && validation.errors.length > 0 && (
-				<div className='mb-6 space-y-2'>
+				<div className='mb-4 space-y-2 sm:mb-5'>
 					{validation.errors.map((error, idx) => (
-						<div
-							key={idx}
-							className='flex items-start gap-2'
-						>
-							<AlertCircle className='w-4 h-4 text-red-400 mt-0.5 flex-shrink-0' />
-							<p className='text-red-400 text-sm'>{error}</p>
+						<div key={idx} className='flex items-start gap-2'>
+							<AlertCircle className='mt-0.5 h-4 w-4 shrink-0 text-red-400' />
+							<p className='text-xs text-red-400 sm:text-sm'>{error}</p>
 						</div>
 					))}
 				</div>
 			)}
 
-			{/* Action Buttons */}
-			<div className=' flex items-center gap-5'>
+			<div className='flex flex-col-reverse gap-2.5 sm:flex-row sm:gap-3'>
 				<button
-					onClick={handleSubmit}
-					disabled={!validation.isValid || isSubmitting}
-					className={`  p-3 px-5 w-1/2 rounded-lg font-semibold transition ${
-						validation.isValid && !isSubmitting
-							? 'bg-blue-500 hover:bg-blue-600 text-white cursor-pointer'
-							: 'bg-zinc-700 text-gray-400 cursor-not-allowed'
-					}`}
-				>
-					{isSubmitting ? 'Connecting...' : 'Connect Wallet'}
-				</button>
-
-				<button
+					type='button'
 					onClick={onBack}
 					disabled={isSubmitting}
-					className='w-1/2 px-5 py-3 bg-zinc-800 hover:bg-zinc-700 text-gray-200 font-semibold  rounded-lg border border-zinc-600 transition disabled:opacity-50 disabled:cursor-not-allowed'
+					className={cn(
+						userSecondaryButtonClass,
+						'w-full py-3 sm:flex-1',
+					)}
 				>
 					Cancel
+				</button>
+				<button
+					type='button'
+					onClick={handleSubmit}
+					disabled={!validation.isValid || isSubmitting}
+					className={cn(userPrimaryButtonClass, 'sm:flex-1')}
+				>
+					{isSubmitting ? 'Connecting…' : 'Connect wallet'}
 				</button>
 			</div>
 		</div>
@@ -574,30 +590,32 @@ const Wallets = ({
 	onWalletClick: () => void;
 }) => {
 	return (
-		<div
-			className='flex items-center justify-between bg-zinc-800/50 p-4 rounded-lg border border-zinc-700 cursor-pointer hover:bg-zinc-800 hover:border-blue-500/50 transition'
+		<button
+			type='button'
+			className='flex w-full items-center justify-between rounded-xl border border-zinc-800 bg-zinc-900/40 p-3 text-left transition hover:border-indigo-500/50 hover:bg-zinc-900 active:scale-[0.99] sm:p-4'
 			onClick={onWalletClick}
 		>
-			<div className='flex items-center gap-3'>
-				<div className='rounded-lg bg-zinc-700 flex items-center justify-center w-12 h-12 border border-zinc-600'>
+			<div className='flex min-w-0 items-center gap-3'>
+				<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800 sm:h-12 sm:w-12'>
 					<Image
 						src={wallet.imageurl}
 						width={32}
 						height={32}
 						alt={wallet.name}
+						className='h-7 w-7 sm:h-8 sm:w-8'
 					/>
 				</div>
-				<div>
-					<p className='text-white font-medium'>{wallet.name}</p>
+				<div className='min-w-0'>
+					<p className={dashboardCardTitleClass}>{wallet.name}</p>
 					{wallet.popular ? (
-						<div className='bg-blue-500/30 text-blue-200 w-fit px-2 py-0.5 rounded text-xs font-medium mt-1'>
-							popular
+						<div className='mt-1 w-fit rounded bg-indigo-500/20 px-2 py-0.5 text-[10px] font-medium text-indigo-300 sm:text-xs'>
+							Popular
 						</div>
 					) : null}
 				</div>
 			</div>
-			<ChevronRight className='w-5 text-gray-500' />
-		</div>
+			<ChevronRight className='h-5 w-5 shrink-0 text-gray-500' />
+		</button>
 	);
 };
 

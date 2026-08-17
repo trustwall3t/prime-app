@@ -85,8 +85,8 @@ const TradesList = ({ openTrades, history }: TradesListProps) => {
 	const trades = tab === 'open' ? openTrades : history;
 
 	return (
-		<div className='space-y-4'>
-			<div className='flex gap-8 border-b border-zinc-700'>
+		<div className='space-y-3 rounded-md border border-zinc-800 bg-zinc-900/40 p-3 sm:space-y-4 sm:p-4'>
+			<div className='flex shrink-0 gap-6 border-b border-zinc-700 sm:gap-8'>
 				<button
 					type='button'
 					onClick={() => setTab('open')}
@@ -111,20 +111,21 @@ const TradesList = ({ openTrades, history }: TradesListProps) => {
 				</button>
 			</div>
 
-			{trades.length === 0 ? (
-				<p className='py-8 text-center text-gray-500'>
-					{tab === 'open' ? 'No open trades.' : 'No history yet.'}
-				</p>
-			) : (
-				<div className='space-y-3'>
-					{trades.map((trade) => (
-						<TradeRow
-							key={trade.id}
-							trade={trade}
-						/>
-					))}
-				</div>
-			)}
+			<div className='h-64 overflow-y-auto overscroll-contain sm:h-72 md:h-80'>
+				{trades.length === 0 ? (
+					<div className='flex h-full items-center justify-center px-4'>
+						<p className='text-center text-sm text-gray-500'>
+							{tab === 'open' ? 'No open trades.' : 'No history yet.'}
+						</p>
+					</div>
+				) : (
+					<div className='space-y-3 pr-1'>
+						{trades.map((trade) => (
+							<TradeRow key={trade.id} trade={trade} />
+						))}
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };
