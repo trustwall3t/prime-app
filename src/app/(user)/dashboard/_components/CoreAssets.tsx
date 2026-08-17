@@ -54,16 +54,16 @@ const CoreAssets = () => {
   return (
     <>
       {coreAsset.map((asset) => (
-        <div className='flex items-center justify-around gap-4 bg-zinc-900 p-4 border-b border-zinc-700 hover:bg-accent-foreground transition-all duration-200 ' key={asset.symbol}>
-                                        <div className='flex items-center gap-2'>
+        <div className='flex min-w-0 items-center justify-between gap-2 border-b border-zinc-700 bg-zinc-900 p-3 transition-all duration-200 hover:bg-accent-foreground sm:justify-around sm:gap-4 sm:p-4 ' key={asset.symbol}>
+                                        <div className='flex min-w-0 items-center gap-2'>
                                             <Image
                                                 alt='logo'
                                                 width={40}
                                                 height={50}
                                                 src={asset.imageUrl}
                                             />
-                                            <div>
-                                                <p className='font-semibold text-lg block truncate max-w-xs'>{asset.name}</p>
+                                            <div className='min-w-0'>
+                                                <p className='block max-w-[120px] truncate text-sm font-semibold sm:max-w-xs sm:text-base'>{asset.name}</p>
                                                 <p className='text-gray-400 text-sm'>{asset.symbol}</p>
                                             </div>
                                         </div>
@@ -73,7 +73,7 @@ const CoreAssets = () => {
         
                                             </span>
                                         </div>
-                                        <div className='max-w-[100px]'>
+                                        <div className='hidden max-w-[72px] shrink-0 sm:block sm:max-w-[100px]'>
                                             <svg
                                                 viewBox='0 0 1200 300'
                                                 className='w-full h-auto'

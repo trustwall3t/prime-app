@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { requestResetPassword } from '@/actions/auth/resetPassword';
 import { toast } from 'sonner';
+import { authPageTitleClass } from '@/lib/userFormStyles';
 import { Spinner } from '@/components/ui/spinner';
 
 export const ForgotPasswordForm = () => {
@@ -53,7 +54,7 @@ export const ForgotPasswordForm = () => {
 		<div className='w-full  flex items-center justify-center bg-zinc-950 px-4 py-10'>
 			<div className='w-full max-w-md rounded-[32px] '>
 				<div className='space-y-3 mb-8'>
-					<h1 className='text-3xl font-semibold text-white'>
+					<h1 className={authPageTitleClass}>
 						Forgot Password
 					</h1>
 					<p className='text-sm text-gray-400'>

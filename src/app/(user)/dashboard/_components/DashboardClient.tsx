@@ -53,7 +53,7 @@ const DashboardClient = ({
 }: DashboardClientProps) => {
 	const [openWallet, setOpenWallet] = React.useState(false);
 	return (
-		<div className='flex flex-col gap-4  w-full'>
+		<div className='flex w-full max-w-full flex-col gap-4 overflow-x-hidden'>
 			<PreviewWallet open={openWallet} setOpen={setOpenWallet} />
 			<div className='grid  gap-4'>
 				{/* <div className='bg-zinc-950 rounded-md p-5 flex flex-col gap-6  border-gray-300'>
@@ -64,11 +64,11 @@ const DashboardClient = ({
 						</div>
 					)}
 				</div> */}
-				<div className='bg-zinc-900 text-gray-300 p-5 border border-zinc-800 rounded-md flex flex-col gap-6'>
+				<div className='flex flex-col gap-6 rounded-md border border-zinc-800 bg-zinc-900 p-4 text-gray-300 sm:p-5'>
 					<div className='space-y-2'>
-						<h3 className='text-sm font-medium'>Total Balance</h3>
-						<div className='flex items-end gap-4'>
-							<p className='text-3xl font-semibold'>
+						<h3 className='text-xs font-medium sm:text-sm'>Total Balance</h3>
+						<div className='flex flex-wrap items-end gap-2 sm:gap-4'>
+							<p className='text-2xl font-semibold tabular-nums sm:text-3xl'>
 									${formatMoney(user.walletBalance)}
 								</p>
 							<span className='inline-block px-2 py-[2px] text-xs bg-amber-300/40 text-amber-500 rounded-sm border-[1px] border-amber-500'>
@@ -76,10 +76,10 @@ const DashboardClient = ({
 							</span>
 						</div>
 					</div>
-					<div className='flex items-center gap-2 min-w-[400px] overflow-scroll '>
+					<div className='flex w-full flex-wrap items-center gap-2'>
 						<Link
 							href={'/dashboard/withdraw'}
-							className='bg-purple-400/50 px-3 py-2 rounded-sm text-sm font-medium  flex items-center gap-1'
+							className='flex items-center gap-1 rounded-sm bg-purple-400/50 px-3 py-2 text-xs font-medium sm:text-sm'
 						>
 							<svg
 								width='15'
@@ -99,7 +99,7 @@ const DashboardClient = ({
 						</Link>
 						<Link
 							href={'/dashboard/deposit'}
-							className='bg-amber-400/10 px-3 py-2 rounded-sm text-sm font-medium flex items-center gap-1'
+							className='flex items-center gap-1 rounded-sm bg-amber-400/10 px-3 py-2 text-xs font-medium sm:text-sm'
 						>
 							<svg
 								width='15'
@@ -119,24 +119,24 @@ const DashboardClient = ({
 						</Link>
 						<div
 							onClick={() => setOpenWallet(true)}
-							className='bg-green-600 px-3 py-2 rounded-sm text-sm font-medium flex items-center gap-1'
+							className='flex cursor-pointer items-center gap-1 rounded-sm bg-green-600 px-3 py-2 text-xs font-medium sm:text-sm'
 						>
 							<LinkIcon className='w-4 h-4 inline-block mr-1' />
 							Connect Wallet
 						</div>
 					</div>
-					<div className='flex items-center justify-between border-t-1 border-b-1 py-5 border-gray-500 mt-5'>
+					<div className='mt-5 flex flex-col gap-3 border-y border-gray-500 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-5'>
 						<Link
 							href='/dashboard/ranking'
-							className='flex items-center gap-2 hover:opacity-80 transition'
+							className='flex min-w-0 flex-wrap items-center gap-2 transition hover:opacity-80'
 						>
-							<Trophy className='text-amber-500' />
-							<p className='text-gray-400 font-medium'>
+							<Trophy className='shrink-0 text-amber-500' />
+							<p className='text-sm font-medium text-gray-400'>
 								Your current rank :
 							</p>
-							<span className='font-semibold'>{ranking.rankName}</span>
+							<span className='text-sm font-semibold sm:text-base'>{ranking.rankName}</span>
 						</Link>
-						<Award className='h-10 w-10 text-amber-400' />
+						<Award className='h-8 w-8 shrink-0 text-amber-400 sm:h-10 sm:w-10' />
 					</div>
 					<div className='space-y-5'>
 						<div className='bg-zinc-950 px-4 py-2.5 rounded-sm flex items-center gap-4 hover:bg-purple-100/10 transition hover:cursor-pointer hover:scale-105 hover:shadow-md'>
@@ -147,7 +147,7 @@ const DashboardClient = ({
 								<p className='uppercase text-gray-400 font-medium text-sm'>
 									Deposit wallet
 								</p>
-								<p className='text-white font-semibold text-lg'>
+								<p className='text-base font-semibold text-white sm:text-lg'>
 									${formatMoney(user.investmentBalance)}
 								</p>
 							</div>
@@ -160,7 +160,7 @@ const DashboardClient = ({
 								<p className='uppercase text-gray-400 font-medium text-sm'>
 									Interest Balances
 								</p>
-								<p className='text-white font-semibold text-xl'>
+								<p className='text-base font-semibold text-white sm:text-lg'>
 									${formatMoney(user.profitBalance)}
 								</p>
 							</div>
@@ -173,7 +173,7 @@ const DashboardClient = ({
 								<p className='uppercase text-gray-400 font-medium text-sm'>
 									Total withdrawal
 								</p>
-								<p className='text-white font-semibold text-lg'>
+								<p className='text-base font-semibold text-white sm:text-lg'>
 									${formatMoney(totalWithdrawals)}
 								</p>
 							</div>
@@ -186,7 +186,7 @@ const DashboardClient = ({
 								<p className='uppercase text-gray-400 font-medium text-sm'>
 									Trade interest
 								</p>
-								<p className='text-white font-semibold text-lg'>
+								<p className='text-base font-semibold text-white sm:text-lg'>
 									${formatMoney(tradeInterest)}
 								</p>
 							</div>
@@ -196,30 +196,30 @@ const DashboardClient = ({
 			</div>
 
 			<div className='space-y-5 mt-5'>
-				<h1 className='font-medium text-2xl'>Market overview</h1>
+				<h1 className='text-lg font-medium sm:text-xl md:text-2xl'>Market overview</h1>
 				<Tabs
 					defaultValue='core'
-					className='w-full '
+					className='w-full max-w-full'
 				>
-					<TabsList className='grid w-full grid-cols-3 gap-2 bg-transparent'>
+					<TabsList className='grid h-auto w-full grid-cols-3 gap-1 bg-transparent sm:gap-2'>
 						<TabsTrigger
 							value='core'
-							className='bg-zinc-900 border  text-white px-4 active:bg-accent-foreground '
+							className='flex items-center justify-center gap-1 border bg-zinc-900 px-1 py-2 text-[10px] text-white active:bg-accent-foreground sm:gap-2 sm:px-4 sm:text-sm'
 						>
-							<LayoutDashboardIcon /> Core assets
+							<LayoutDashboardIcon className='h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4' /> Core assets
 						</TabsTrigger>
 						<TabsTrigger
 							value='market'
-							className='bg-zinc-900 border  text-white px-4 active:bg-accent-foreground '
+							className='flex items-center justify-center gap-1 border bg-zinc-900 px-1 py-2 text-[10px] text-white active:bg-accent-foreground sm:gap-2 sm:px-4 sm:text-sm'
 						>
-							<TrendingUpIcon />
+							<TrendingUpIcon className='h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4' />
 							Top gainers
 						</TabsTrigger>
 						<TabsTrigger
 							value='news'
-							className='bg-zinc-900 border  text-white px-4 active:bg-accent-foreground '
+							className='flex items-center justify-center gap-1 border bg-zinc-900 px-1 py-2 text-[10px] text-white active:bg-accent-foreground sm:gap-2 sm:px-4 sm:text-sm'
 						>
-							<TrendingDownIcon />
+							<TrendingDownIcon className='h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4' />
 							Top losers
 						</TabsTrigger>
 					</TabsList>
@@ -236,7 +236,7 @@ const DashboardClient = ({
 						className='mt-2'
 					>
 						<div className='py-2 bg-zinc-900 border border-zinc-700 rounded-md'>
-							<div className='flex items-center justify-around gap-4 bg-zinc-900 p-4  border-b border-zinc-700 hover:bg-accent-foreground transition-all duration-200'>
+							<div className='flex min-w-0 items-center justify-between gap-2 bg-zinc-900 p-3 sm:justify-around sm:gap-4 sm:p-4  border-b border-zinc-700 hover:bg-accent-foreground transition-all duration-200'>
 								<div className='flex items-center gap-2'>
 									<Image
 										alt='logo'
@@ -245,7 +245,7 @@ const DashboardClient = ({
 										src='/dashboard/btc.svg'
 									/>
 									<div>
-										<p className='font-semibold text-lg'>
+										<p className='font-semibold text-sm sm:text-base'>
 											Bitcoin
 										</p>
 										<p className='text-gray-400 text-sm'>
@@ -259,7 +259,7 @@ const DashboardClient = ({
 									</p>
 									<span className='bg-green-500 block w-5 h-[2px] rounded-4xl'></span>
 								</div>
-								<div className='max-w-[100px]'>
+								<div className='hidden max-w-[72px] shrink-0 sm:block sm:max-w-[100px]'>
 									<svg
 										viewBox='0 0 1200 300'
 										className='w-full h-auto'
@@ -276,7 +276,7 @@ const DashboardClient = ({
 									</svg>
 								</div>
 							</div>
-							<div className='flex items-center justify-around gap-4 bg-zinc-900 p-4 border-b border-zinc-700 hover:bg-accent-foreground transition-all duration-200'>
+							<div className='flex min-w-0 items-center justify-between gap-2 bg-zinc-900 p-3 sm:justify-around sm:gap-4 sm:p-4 border-b border-zinc-700 hover:bg-accent-foreground transition-all duration-200'>
 								<div className='flex items-center gap-2'>
 									<Image
 										alt='logo'
@@ -285,7 +285,7 @@ const DashboardClient = ({
 										src='/dashboard/stocks/google.png'
 									/>
 									<div>
-										<p className='font-semibold text-lg truncate'>
+										<p className='font-semibold text-sm sm:text-base truncate'>
 											Alphabet, Inc.
 										</p>
 										<p className='text-gray-400 text-sm'>
@@ -299,7 +299,7 @@ const DashboardClient = ({
 									</p>
 									<span className='bg-green-500 block w-5 h-[2px] rounded-4xl'></span>
 								</div>
-								<div className='max-w-[100px]'>
+								<div className='hidden max-w-[72px] shrink-0 sm:block sm:max-w-[100px]'>
 									<svg
 										viewBox='0 0 1200 300'
 										className='w-full h-auto'
@@ -316,7 +316,7 @@ const DashboardClient = ({
 									</svg>
 								</div>
 							</div>
-							<div className='flex items-center justify-around gap-4 bg-zinc-900 p-4 rounded-md'>
+							<div className='flex min-w-0 items-center justify-between gap-2 bg-zinc-900 p-3 sm:justify-around sm:gap-4 sm:p-4 rounded-md'>
 								<div className='flex items-center gap-2'>
 									<Image
 										alt='logo'
@@ -325,7 +325,7 @@ const DashboardClient = ({
 										src='/dashboard/stocks/tesla.png'
 									/>
 									<div>
-										<p className='font-semibold text-lg'>
+										<p className='font-semibold text-sm sm:text-base'>
 											Tesla, Inc.
 										</p>
 										<p className='text-gray-400 text-sm'>
@@ -339,7 +339,7 @@ const DashboardClient = ({
 									</p>
 									<span className='bg-green-500 block w-5 h-[2px] rounded-4xl'></span>
 								</div>
-								<div className='max-w-[100px]'>
+								<div className='hidden max-w-[72px] shrink-0 sm:block sm:max-w-[100px]'>
 									<svg
 										viewBox='0 0 1200 300'
 										className='w-full h-auto'
@@ -363,7 +363,7 @@ const DashboardClient = ({
 						className='mt-2'
 					>
 						<div className='py-2 bg-zinc-900 border border-zinc-700 rounded-md'>
-							<div className='flex items-center justify-around gap-4 bg-zinc-900 p-4  border-b border-zinc-700 hover:bg-accent-foreground transition-all duration-200'>
+							<div className='flex min-w-0 items-center justify-between gap-2 bg-zinc-900 p-3 sm:justify-around sm:gap-4 sm:p-4  border-b border-zinc-700 hover:bg-accent-foreground transition-all duration-200'>
 								<div className='flex items-center gap-2'>
 									<Image
 										alt='logo'
@@ -372,7 +372,7 @@ const DashboardClient = ({
 										src='/dashboard/eth.svg'
 									/>
 									<div>
-										<p className='font-semibold text-lg'>
+										<p className='font-semibold text-sm sm:text-base'>
 											Etherum
 										</p>
 										<p className='text-gray-400 text-sm'>
@@ -386,7 +386,7 @@ const DashboardClient = ({
 									</p>
 									<span className='bg-green-500 block w-5 h-[2px] rounded-4xl'></span>
 								</div>
-								<div className='max-w-[100px]'>
+								<div className='hidden max-w-[72px] shrink-0 sm:block sm:max-w-[100px]'>
 									<svg
 										viewBox='0 0 1200 300'
 										className='w-full h-auto'
@@ -403,7 +403,7 @@ const DashboardClient = ({
 									</svg>
 								</div>
 							</div>
-							<div className='flex items-center justify-around gap-4 bg-zinc-900 p-4 border-b border-zinc-700 hover:bg-accent-foreground transition-all duration-200'>
+							<div className='flex min-w-0 items-center justify-between gap-2 bg-zinc-900 p-3 sm:justify-around sm:gap-4 sm:p-4 border-b border-zinc-700 hover:bg-accent-foreground transition-all duration-200'>
 								<div className='flex items-center gap-2'>
 									<div className='bg-white rounded-md'>
 										<Image
@@ -414,7 +414,7 @@ const DashboardClient = ({
 										/>
 									</div>
 									<div>
-										<p className='font-semibold text-lg truncate'>
+										<p className='font-semibold text-sm sm:text-base truncate'>
 											Zomato
 										</p>
 										<p className='text-gray-400 text-sm'>
@@ -428,7 +428,7 @@ const DashboardClient = ({
 									</p>
 									<span className='bg-green-500 block w-5 h-[2px] rounded-4xl'></span>
 								</div>
-								<div className='max-w-[100px]'>
+								<div className='hidden max-w-[72px] shrink-0 sm:block sm:max-w-[100px]'>
 									<svg
 										viewBox='0 0 1200 300'
 										className='w-full h-auto'
@@ -445,7 +445,7 @@ const DashboardClient = ({
 									</svg>
 								</div>
 							</div>
-							<div className='flex items-center justify-around gap-4 bg-zinc-900 p-4 rounded-md'>
+							<div className='flex min-w-0 items-center justify-between gap-2 bg-zinc-900 p-3 sm:justify-around sm:gap-4 sm:p-4 rounded-md'>
 								<div className='flex items-center gap-2'>
 									<Image
 										alt='logo'
@@ -454,7 +454,7 @@ const DashboardClient = ({
 										src='/dashboard/stocks/netflix.png'
 									/>
 									<div>
-										<p className='font-semibold text-lg truncate'>
+										<p className='font-semibold text-sm sm:text-base truncate'>
 											Netflix, Inc.
 										</p>
 										<p className='text-gray-400 text-sm'>
@@ -468,7 +468,7 @@ const DashboardClient = ({
 									</p>
 									<span className='bg-green-500 block w-5 h-[2px] rounded-4xl'></span>
 								</div>
-								<div className='max-w-[100px]'>
+								<div className='hidden max-w-[72px] shrink-0 sm:block sm:max-w-[100px]'>
 									<svg
 										viewBox='0 0 1200 300'
 										className='w-full h-auto'
@@ -504,7 +504,7 @@ const DashboardClient = ({
 							</div>
 							<Link
 								href={`/dashboard/traders/${activeCopy.traderId}`}
-								className='font-semibold text-lg text-center hover:text-indigo-400 transition'
+								className='font-semibold text-sm sm:text-base text-center hover:text-indigo-400 transition'
 							>
 								{activeCopy.traderName}
 							</Link>
@@ -538,7 +538,7 @@ const DashboardClient = ({
 							<div className='w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center border border-zinc-700'>
 								<User2Icon className='w-8 h-8 text-gray-500' />
 							</div>
-							<h3 className='font-semibold text-lg text-gray-400'>
+							<h3 className='font-semibold text-sm sm:text-base text-gray-400'>
 								No active copy trader
 							</h3>
 							<p className='text-sm text-gray-500 text-center'>
@@ -562,7 +562,7 @@ const DashboardClient = ({
 						Unlock next rank
 					</p>
 					<Award className='h-12 w-12 text-amber-400' />
-					<h3 className='font-semibold text-lg'>
+					<h3 className='font-semibold text-sm sm:text-base'>
 						{formatCurrency(ranking.myInvest.current)} /{' '}
 						{formatCurrency(ranking.myInvest.target)}
 					</h3>

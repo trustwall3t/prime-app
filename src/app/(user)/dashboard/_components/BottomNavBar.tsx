@@ -54,7 +54,7 @@ const BottomNavBar = () => {
 	return (
 		<div
 			ref={navRef}
-			className='fixed bottom-2 left-0 right-0 z-50 flex max-w-[99%] items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950/90 shadow-md backdrop-blur-md sm:hidden'
+			className='fixed bottom-2 left-2 right-2 z-50 flex items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950/90 shadow-md backdrop-blur-md sm:hidden'
 		>
 			{showMenu && (
 				<div className='absolute bottom-20 right-0 z-50 w-[200px] rounded-lg border border-zinc-800 bg-zinc-900 p-4 shadow-md backdrop-blur-md'>

@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { authPageTitleClass } from '@/lib/userFormStyles';
 import { verifyEmail } from '@/actions/auth/signup';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/ui/spinner';
@@ -62,7 +63,7 @@ const VerifyForm = ({ email }: { email: string }) => {
 		<div className='w-full min-h-screen flex items-center justify-center bg-zinc-950 px-4 py-10'>
 			<div className='w-full max-w-md rounded-[32px] border border-zinc-800 bg-zinc-950/95 p-8 shadow-[0_40px_120px_rgba(15,23,42,0.6)]'>
 				<div className='space-y-3 mb-8'>
-					<h1 className='text-3xl font-semibold text-white'>
+					<h1 className={authPageTitleClass}>
 						Verify Email
 					</h1>
 					<p className='text-sm text-gray-400'>

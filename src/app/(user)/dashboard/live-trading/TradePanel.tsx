@@ -6,6 +6,7 @@ import {
 	QUICK_STAKES,
 	TradeDirection,
 }  from '../../../../types';
+import { dashboardMoneyClass, dashboardStatValueLgClass } from '@/lib/userFormStyles';
 
 interface TradePanelProps {
 	balance: number;
@@ -41,7 +42,7 @@ const TradePanel = ({
 
 	return (
 		<div className='space-y-6'>
-			<p className='text-4xl font-bold text-white'>
+			<p className={`${dashboardStatValueLgClass} tabular-nums`}>
 				${balance.toFixed(2)}
 			</p>
 
@@ -117,7 +118,7 @@ const TradePanel = ({
 					className='rounded-md bg-red-600 py-5 text-center font-bold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50'
 				>
 					<p className='text-sm tracking-wide'>SELL / DOWN</p>
-					<p className='mt-1 text-xl'>{currentPrice.toFixed(2)}</p>
+					<p className={`mt-1 ${dashboardMoneyClass}`}>{currentPrice.toFixed(2)}</p>
 				</button>
 				<button
 					type='button'
@@ -126,7 +127,7 @@ const TradePanel = ({
 					className='rounded-md bg-emerald-600 py-5 text-center font-bold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50'
 				>
 					<p className='text-sm tracking-wide'>BUY / UP</p>
-					<p className='mt-1 text-xl'>{currentPrice.toFixed(2)}</p>
+					<p className={`mt-1 ${dashboardMoneyClass}`}>{currentPrice.toFixed(2)}</p>
 				</button>
 			</div>
 

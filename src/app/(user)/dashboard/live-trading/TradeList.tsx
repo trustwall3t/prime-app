@@ -90,7 +90,7 @@ const TradesList = ({ openTrades, history }: TradesListProps) => {
 				<button
 					type='button'
 					onClick={() => setTab('open')}
-					className={`pb-3 text-lg transition ${
+					className={`pb-3 text-sm transition sm:text-base md:text-lg ${
 						tab === 'open'
 							? 'border-b-2 border-indigo-500 text-indigo-400'
 							: 'text-gray-400 hover:text-white'
@@ -101,7 +101,7 @@ const TradesList = ({ openTrades, history }: TradesListProps) => {
 				<button
 					type='button'
 					onClick={() => setTab('history')}
-					className={`pb-3 text-lg transition ${
+					className={`pb-3 text-sm transition sm:text-base md:text-lg ${
 						tab === 'history'
 							? 'border-b-2 border-indigo-500 text-indigo-400'
 							: 'text-gray-400 hover:text-white'

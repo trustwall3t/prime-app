@@ -1,14 +1,15 @@
 import React from 'react';
 import KycSection from '../_components/forms/KycSection';
 import { getSession } from '@/lib/session';
+import { dashboardPageTitleClass, dashboardPageWrapClass } from '@/lib/userFormStyles';
 
 const page = async () => {
 	const session = await getSession();
 
 	return (
-		<div className='space-y-6'>
+		<div className={dashboardPageWrapClass}>
 			<div className='space-y-2'>
-				<h1 className='text-3xl font-bold text-white'>
+				<h1 className={dashboardPageTitleClass}>
 					KYC Verification
 				</h1>
 				<p className='text-gray-400'>

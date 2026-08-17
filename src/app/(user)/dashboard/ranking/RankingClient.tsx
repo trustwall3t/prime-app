@@ -2,6 +2,15 @@
 
 import React from 'react';
 import { Award, Lock, CheckCircle } from 'lucide-react';
+import {
+	dashboardCardTitleClass,
+	dashboardMoneyClass,
+	dashboardPageTitleClass,
+	dashboardPageWrapClass,
+	dashboardSectionTitleClass,
+	dashboardStatValueClass,
+	dashboardSubheadingClass,
+} from '@/lib/userFormStyles';
 
 interface ProgressMetric {
 	current: number;
@@ -74,9 +83,9 @@ const ProgressStatBox = ({
 				</p>
 				<p className='text-xs text-gray-500'>{Math.round(pct)}%</p>
 			</div>
-			<p className='text-2xl font-bold text-white'>
+			<p className={dashboardStatValueClass}>
 				{format(current)}{' '}
-				<span className='text-lg font-normal text-gray-500'>
+				<span className='text-sm font-normal text-gray-500 sm:text-base md:text-lg'>
 					/ {format(target)}
 				</span>
 			</p>
@@ -96,7 +105,7 @@ const BonusBox = ({ amount }: { amount: number }) => (
 		<p className='text-xs uppercase tracking-wide text-gray-400'>
 			Next rank bonus
 		</p>
-		<p className='text-xl font-semibold text-blue-400'>
+		<p className={`${dashboardMoneyClass} text-blue-400`}>
 			{formatCurrency(amount)}
 		</p>
 	</div>
@@ -142,7 +151,7 @@ const CurrentRankCard = ({
 				<p className='text-xs uppercase tracking-wide text-gray-400'>
 					Current rank
 				</p>
-				<h2 className='text-2xl font-bold text-white'>
+				<h2 className={dashboardSectionTitleClass}>
 					{progress.rankName}
 				</h2>
 				{bonusEarned > 0 && (
@@ -211,7 +220,7 @@ const RankTierCard = ({ tier }: { tier: RankTier }) => (
 				achieved={tier.achieved}
 			/>
 			<div>
-				<h3 className='text-xl font-bold text-white'>{tier.name}</h3>
+				<h3 className={dashboardSubheadingClass}>{tier.name}</h3>
 				<p className='text-sm text-gray-400'>Level {tier.level}</p>
 			</div>
 		</div>
@@ -233,7 +242,7 @@ const RankTierCard = ({ tier }: { tier: RankTier }) => (
 
 		<div className='flex items-center justify-between border-t border-zinc-700 pt-4'>
 			<p className='text-gray-400'>Bonus</p>
-			<p className='text-lg font-medium text-blue-400'>
+			<p className={`${dashboardCardTitleClass} text-blue-400`}>
 				{formatCurrency(tier.bonus)}
 			</p>
 		</div>
@@ -250,9 +259,9 @@ export default function RankingClient({
 	bonusEarned: number;
 }) {
 	return (
-		<div className='space-y-8'>
+		<div className={`${dashboardPageWrapClass} space-y-8`}>
 			<div className='space-y-2'>
-				<h1 className='text-2xl font-medium text-white'>
+				<h1 className={dashboardPageTitleClass}>
 					Trade ranking list
 				</h1>
 				<p className='text-gray-400 text-sm max-w-lg'>
@@ -265,7 +274,7 @@ export default function RankingClient({
 			<CurrentRankCard progress={currentRank} bonusEarned={bonusEarned} />
 
 			<div className='space-y-4'>
-				<h2 className='text-2xl font-bold text-white'>Rank tiers</h2>
+				<h2 className={dashboardSectionTitleClass}>Rank tiers</h2>
 				<div className='space-y-4'>
 					{tiers.map((tier) => (
 						<RankTierCard key={tier.id} tier={tier} />

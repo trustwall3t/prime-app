@@ -1,6 +1,7 @@
 'use client'
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { dashboardPageTitleClass, dashboardPageWrapClass } from '@/lib/userFormStyles';
 
 const Plans = () => {
     const router = useRouter();
@@ -47,8 +48,8 @@ const Plans = () => {
         }
     ];
     return (
-        <div>
-            <h1 className="text-2xl font-bold text-center mb-5">Copy Trading Plans</h1>
+        <div className={dashboardPageWrapClass}>
+            <h1 className={`${dashboardPageTitleClass} mb-5 text-center`}>Copy Trading Plans</h1>
             <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
                 {plans.map((plan) => (
                     <div key={plan.id} className="bg-black   ">

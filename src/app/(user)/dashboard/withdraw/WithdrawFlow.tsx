@@ -16,7 +16,7 @@ import {
 	X,
 } from 'lucide-react';
 import { requestWithdrawal } from '@/actions/withdraw';
-import { userInputClass, userPrimaryButtonClass } from '@/lib/userFormStyles';
+import { userInputClass, userPrimaryButtonClass, dashboardModalTitleClass, dashboardCardTitleClass } from '@/lib/userFormStyles';
 import { cn } from '@/lib/utils';
 
 type WithdrawMethod = {
@@ -343,7 +343,7 @@ function StepSelectMethod({
 	return (
 		<div className='space-y-5'>
 			<div>
-				<h2 className='text-xl font-semibold text-white'>Withdraw funds</h2>
+				<h2 className={dashboardModalTitleClass}>Withdraw funds</h2>
 				<p className='mt-1 text-sm text-gray-400'>
 					Choose how you&apos;d like to receive your withdrawal.
 				</p>
@@ -355,7 +355,7 @@ function StepSelectMethod({
 						<Wallet className='h-4 w-4 text-indigo-400' />
 						Available balance
 					</div>
-					<span className='text-lg font-semibold text-white'>
+					<span className='text-base font-semibold text-white sm:text-lg'>
 						${formatUsd(balance)}
 					</span>
 				</div>
@@ -447,7 +447,7 @@ function StepEnterDetails({
 					<Image src={method.image} alt={method.name} width={24} height={24} />
 				</div>
 				<div>
-					<h2 className='text-lg font-semibold text-white'>{method.name}</h2>
+					<h2 className={dashboardCardTitleClass}>{method.name}</h2>
 					<p className='text-xs text-gray-500'>{method.network}</p>
 				</div>
 			</div>
@@ -559,7 +559,7 @@ function StepConfirm({
 	return (
 		<div className='space-y-5'>
 			<div>
-				<h2 className='text-xl font-semibold text-white'>Review withdrawal</h2>
+				<h2 className={dashboardModalTitleClass}>Review withdrawal</h2>
 				<p className='mt-1 text-sm text-gray-400'>
 					Double-check the details before submitting.
 				</p>
@@ -617,7 +617,7 @@ function SuccessView({
 			<div className='mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20'>
 				<Check className='h-8 w-8 text-emerald-400' />
 			</div>
-			<h2 className='text-xl font-semibold text-white'>Request submitted</h2>
+			<h2 className={dashboardModalTitleClass}>Request submitted</h2>
 			<p className='mt-2 max-w-xs text-sm text-gray-400'>
 				Your ${formatUsd(amount)} {method.name} withdrawal to{' '}
 				<span className='font-mono text-gray-300'>{maskAddress(wallet)}</span>{' '}

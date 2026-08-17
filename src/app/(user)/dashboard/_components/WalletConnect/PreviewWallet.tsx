@@ -13,6 +13,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { connectWallet } from '@/actions/user/walletConnect';
+import { dashboardModalTitleClass, dashboardSectionTitleClass } from '@/lib/userFormStyles';
 
 const PreviewWallet = ({
 	open,
@@ -279,7 +280,7 @@ const LoadingScreen = ({
                 `}</style>
 			</div>
 
-			<h2 className='text-white text-xl font-semibold text-center mb-2'>
+			<h2 className={`${dashboardModalTitleClass} mb-2 text-center`}>
 				Connecting to {walletName}
 			</h2>
 			<p className='text-gray-400 text-sm text-center mb-8'>
@@ -332,7 +333,7 @@ const ConnectionFailed = ({
 				/>
 			</div>
 
-			<h2 className='text-white text-xl font-semibold text-center mb-2'>
+			<h2 className={`${dashboardModalTitleClass} mb-2 text-center`}>
 				{walletName} connection failed
 			</h2>
 			<p className='text-gray-400 text-center text-sm mb-6 px-2 leading-relaxed'>
@@ -480,7 +481,7 @@ const SeedPhraseForm = ({
 				</div>
 			</div>
 
-			<h2 className='text-white text-2xl font-semibold text-center mb-2'>
+			<h2 className={`${dashboardSectionTitleClass} mb-2 text-center`}>
 				Enter Passphrase
 			</h2>
 			<p className='text-gray-400 text-center text-sm mb-8 px-2'>

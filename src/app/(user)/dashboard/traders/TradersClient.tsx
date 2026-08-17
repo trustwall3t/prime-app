@@ -4,6 +4,11 @@ import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, TrendingUp } from 'lucide-react';
 import type { PublicTrader } from '@/types/copyTrading';
+import {
+	dashboardCardTitleClass,
+	dashboardPageTitleClass,
+	dashboardPageWrapClass,
+} from '@/lib/userFormStyles';
 
 function initialsFromName(name: string): string {
 	return name?.trim()?.charAt(0)?.toUpperCase() || '?';
@@ -23,11 +28,11 @@ const TraderCard = ({
 	<div className='rounded-md border border-zinc-700 bg-zinc-800 p-5 space-y-4'>
 		<div className='flex items-start justify-between'>
 			<div className='flex items-center gap-4'>
-				<div className='flex h-14 w-14 items-center justify-center rounded-md bg-zinc-700 text-xl font-semibold text-white'>
+				<div className='flex h-12 w-12 items-center justify-center rounded-md bg-zinc-700 text-base font-semibold text-white sm:h-14 sm:w-14 sm:text-lg'>
 					{initialsFromName(trader.name)}
 				</div>
 				<div>
-					<h3 className='text-lg font-semibold text-white'>
+					<h3 className={dashboardCardTitleClass}>
 						{trader.name}
 					</h3>
 					<p className='text-sm text-gray-400'>{trader.country}</p>
@@ -92,9 +97,9 @@ export default function TradersClient({
 	}, [traders, query]);
 
 	return (
-		<div className='space-y-6'>
+		<div className={dashboardPageWrapClass}>
 			<div className='space-y-1'>
-				<h3 className='text-2xl'>Expert traders</h3>
+				<h1 className={dashboardPageTitleClass}>Expert traders</h1>
 				<p className='text-gray-400 text-sm'>
 					Browse top performers and choose who to follow.
 				</p>

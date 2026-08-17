@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import KycForm from './KycForm';
+import { dashboardModalTitleClass, dashboardPageTitleClass } from '@/lib/userFormStyles';
 
 interface KycSectionProps {
 	isVerified?: boolean;
@@ -47,7 +48,7 @@ const KycSection = ({
 	if (pending) {
 		return (
 			<div className='rounded-md border border-zinc-700 bg-zinc-800 p-6 space-y-4'>
-				<h2 className='text-xl font-semibold text-white'>
+				<h2 className={dashboardModalTitleClass}>
 					Hey, {firstName ?? 'there'} <span aria-hidden>👋</span>
 				</h2>
 
@@ -68,7 +69,7 @@ const KycSection = ({
 
 	return (
 		<div className='rounded-md border border-zinc-700 bg-zinc-800 p-6 space-y-4'>
-			<h2 className='text-xl font-semibold text-white'>
+			<h2 className={dashboardModalTitleClass}>
 				Hey, {firstName ?? 'there'} <span aria-hidden>👋</span>
 			</h2>
 
@@ -99,7 +100,7 @@ const KycSection = ({
 
 					<DialogContent className='max-h-[85vh] max-w-lg overflow-y-auto border-zinc-700 bg-zinc-900 text-white'>
 						<DialogHeader>
-							<DialogTitle className='text-2xl font-bold text-white'>
+							<DialogTitle className={dashboardPageTitleClass}>
 								Submit verification
 							</DialogTitle>
 						</DialogHeader>

@@ -9,6 +9,12 @@ import {
 	getMyCopiedTradeHistory,
 	stopCopyTrading,
 } from '@/actions/user/copyTrading';
+import {
+	dashboardCardTitleClass,
+	dashboardPageTitleClass,
+	dashboardPageWrapClass,
+	dashboardSubheadingClass,
+} from '@/lib/userFormStyles';
 import CopiedTradesList from './CopiedTradesList';
 
 function initialsFromName(name: string): string {
@@ -28,11 +34,11 @@ const CopiedTraderCard = ({
 }) => (
 	<div className='rounded-md border border-zinc-700 bg-zinc-800 p-6 space-y-6'>
 		<div className='flex items-start gap-4'>
-			<div className='flex h-14 w-14 shrink-0 items-center justify-center rounded-md bg-zinc-700 text-xl font-semibold text-white'>
+			<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-zinc-700 text-base font-semibold text-white sm:h-14 sm:w-14 sm:text-lg'>
 				{initialsFromName(copy.traderName)}
 			</div>
 			<div className='space-y-2'>
-				<h3 className='text-lg font-semibold text-white'>
+				<h3 className={dashboardCardTitleClass}>
 					{copy.traderName}
 				</h3>
 				<p className='text-sm text-gray-400'>
@@ -126,9 +132,9 @@ export default function CopyTradingClient({
 	};
 
 	return (
-		<div className='space-y-6'>
+		<div className={dashboardPageWrapClass}>
 			<div className='space-y-2'>
-				<h1 className='text-3xl font-bold text-white'>Copy trading</h1>
+				<h1 className={dashboardPageTitleClass}>Copy trading</h1>
 				<p className='text-gray-400 text-sm'>
 					Traders you are currently copying. Stopping here ends the
 					subscription only — open live trades are not closed.
@@ -137,7 +143,7 @@ export default function CopyTradingClient({
 
 			{copies.length === 0 ? (
 				<div className='rounded-md border border-zinc-700 bg-zinc-800 p-8 text-center space-y-4'>
-					<p className='text-lg font-semibold text-white'>
+					<p className={dashboardCardTitleClass}>
 						You are not copying anyone yet
 					</p>
 					<p className='text-sm text-gray-400 max-w-sm mx-auto'>
@@ -172,7 +178,7 @@ export default function CopyTradingClient({
 
 			<div className='space-y-3 border-t border-zinc-700 pt-6'>
 				<div className='flex items-center justify-between gap-4'>
-					<h2 className='text-xl font-semibold text-white'>
+					<h2 className={dashboardSubheadingClass}>
 						Copied trade history
 					</h2>
 					<button

@@ -1,8 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getUserTransactionHistory } from '@/actions/getAllTransactions';
 import {
+	dashboardPageTitleClass,
 	dashboardTabTriggerClass,
 	dashboardTabsListClass,
+	dashboardPageWrapClass,
 } from '@/lib/userFormStyles';
 import AllTransactions from './AllTransactions';
 import DepositHistory from './DepositHistory';
@@ -17,9 +19,9 @@ const TransactionHistory = async () => {
 	const trades = transactions.filter((t) => t.type === 'trade');
 
 	return (
-		<div className='space-y-6'>
+		<div className={dashboardPageWrapClass}>
 			<div className='space-y-2'>
-				<h1 className='text-3xl font-bold text-white'>Transactions</h1>
+				<h1 className={dashboardPageTitleClass}>Transactions</h1>
 				<p className='text-gray-400 text-sm'>
 					History of deposits, withdrawals, and live trades.
 				</p>

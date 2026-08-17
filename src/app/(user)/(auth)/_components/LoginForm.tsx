@@ -18,6 +18,7 @@ import { useTransition } from 'react';
 import { useUser } from '@/lib/context/UserContext';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { authPageTitleClass } from '@/lib/userFormStyles';
 import { Spinner } from '@/components/ui/spinner';
 
 export const LoginForm = () => {
@@ -62,7 +63,7 @@ export const LoginForm = () => {
 	return (
 		<div className='w-full'>
 			<div className='space-y-3 mb-8'>
-				<h1 className='text-3xl font-semibold text-white'>Sign in</h1>
+				<h1 className={authPageTitleClass}>Sign in</h1>
 				<p className='text-gray-400 text-sm'>
 					Enter your email and password to continue.
 				</p>

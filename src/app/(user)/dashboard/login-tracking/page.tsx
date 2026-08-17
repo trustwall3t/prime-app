@@ -5,6 +5,7 @@ import { AlertCircle, LogOut, Shield } from 'lucide-react';
 import { getLoginHistory, logoutAllOtherSessions, logoutSession } from '@/actions/loginHistory';
 import { toast } from 'sonner';
 import { TableSkeleton } from '@/components/skeletons';
+import { dashboardPageTitleClass, dashboardPageWrapClass } from '@/lib/userFormStyles';
 
 interface LoginSession {
 	id: string;
@@ -109,11 +110,11 @@ const LoginHistory = () => {
 	const endIndex = Math.min(currentPage * ITEMS_PER_PAGE, totalCount);
 
 	return (
-		<div className='w-full'>
+		<div className={dashboardPageWrapClass}>
 			{/* Header */}
 			<div className='mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
 				<div>
-					<h1 className='text-2xl font-medium text-white mb-2'>
+					<h1 className={`${dashboardPageTitleClass} mb-2`}>
 						Login History
 					</h1>
 					<p className='text-gray-400'>

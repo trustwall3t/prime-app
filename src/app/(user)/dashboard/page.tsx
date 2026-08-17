@@ -5,6 +5,7 @@ import { db } from '@/lib/db';
 import { buildRankingView, getRankMetrics } from '@/lib/ranking';
 import { getUserDashboardFinancials } from '@/actions/user/dashboardStats';
 import DashboardClient from './_components/DashboardClient';
+import { dashboardPageWrapClass } from '@/lib/userFormStyles';
 
 const DashboardPage = async () => {
 	const session = await getSession();
@@ -49,14 +50,16 @@ const DashboardPage = async () => {
 		: null;
 
 	return (
-		<DashboardClient
-			user={user}
-			ranking={ranking.currentRank}
-			nextRankName={ranking.nextTier?.name ?? ranking.achieved?.name ?? 'Platinum'}
-			activeCopy={activeCopy}
-			totalWithdrawals={financials.totalWithdrawals}
-			tradeInterest={financials.tradeInterest}
-		/>
+		<div className={dashboardPageWrapClass}>
+			<DashboardClient
+				user={user}
+				ranking={ranking.currentRank}
+				nextRankName={ranking.nextTier?.name ?? ranking.achieved?.name ?? 'Platinum'}
+				activeCopy={activeCopy}
+				totalWithdrawals={financials.totalWithdrawals}
+				tradeInterest={financials.tradeInterest}
+			/>
+		</div>
 	);
 };
 

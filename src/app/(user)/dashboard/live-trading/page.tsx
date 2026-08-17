@@ -3,6 +3,7 @@ import { getSession } from '@/lib/session';
 import TradingScreen from './TradingScreen';
 import { syncTrades } from '@/actions/user/syncTrade';
 import { loadTradingAssetsWithPrices } from '@/actions/user/refreshPrices';
+import { dashboardPageWrapClass } from '@/lib/userFormStyles';
 
 const TradingPage = async () => {
 	try {
@@ -30,7 +31,7 @@ const TradingPage = async () => {
 		}
 
 		return (
-			<div className='space-y-6'>
+			<div className={dashboardPageWrapClass}>
 				<TradingScreen
 					assets={assets}
 					initialBalance={tradingData.balance}

@@ -8,6 +8,12 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import {
+	dashboardPageTitleClass,
+	dashboardPageWrapClass,
+	dashboardSectionTitleClass,
+} from '@/lib/userFormStyles';
+
 const Referrals = () => {
 	const referrals: {
 		id: number;
@@ -19,16 +25,16 @@ const Referrals = () => {
 		
 	];
 	return (
-		<>
-			<div className=' bg-[var(--myGreen)] text-white p-4 rounded-md space-y-5'>
+		<div className={dashboardPageWrapClass}>
+			<div className='space-y-5 rounded-md bg-[var(--myGreen)] p-4 text-white'>
 				<div>
-					<h1 className='text-2xl font-bold'>Referrals</h1>
+					<h1 className={dashboardPageTitleClass}>Referrals</h1>
 					<p className='text-sm'>Invite friends and earn rewards</p>
 					<p className='text-sm'>
 						Earn 10% of your friends&apos; trading profits
 					</p>
 				</div>
-				<div className='flex items-center justify-between'>
+				<div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
 					<p>
 						To refer someone, kindly copy and share the link given
 						below
@@ -52,7 +58,7 @@ const Referrals = () => {
 				</div>
 			</div>
 			<div>
-				<h1 className='text-2xl font-bold mt-5'>Your Referrals</h1>
+				<h2 className={`${dashboardSectionTitleClass} mt-5`}>Your Referrals</h2>
 				<p className='text-sm mb-5'>
 					Here are the people you have referred
 				</p>
@@ -87,13 +93,13 @@ const Referrals = () => {
 					</Table>
 				) : (
 					<div className='flex items-center justify-center h-[400px] bg-gray-100/50 border border-gray-300 p-5 rounded-md'>
-						<p className='text-2xl font-semibold'>
+						<p className='text-base font-semibold sm:text-lg md:text-xl'>
 							No referrals yet ...
 						</p>
 					</div>
 				)}
 			</div>
-		</>
+		</div>
 	);
 };
 

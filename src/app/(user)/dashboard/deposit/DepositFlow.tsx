@@ -15,7 +15,7 @@ import {
 	X,
 } from 'lucide-react';
 import { deposit } from '@/actions/deposit';
-import { userInputClass, userPrimaryButtonClass } from '@/lib/userFormStyles';
+import { userInputClass, userPrimaryButtonClass, dashboardModalTitleClass, dashboardCardTitleClass } from '@/lib/userFormStyles';
 import { cn } from '@/lib/utils';
 
 type DepositMethod = {
@@ -337,7 +337,7 @@ function StepSelectMethod({
 	return (
 		<div className='space-y-5'>
 			<div>
-				<h2 className='text-xl font-semibold text-white'>Deposit funds</h2>
+				<h2 className={dashboardModalTitleClass}>Deposit funds</h2>
 				<p className='mt-1 text-sm text-gray-400'>
 					Choose a cryptocurrency to fund your account.
 				</p>
@@ -389,7 +389,7 @@ function StepEnterAmount({
 					<Image src={method.image} alt={method.name} width={24} height={24} />
 				</div>
 				<div>
-					<h2 className='text-lg font-semibold text-white'>{method.name}</h2>
+					<h2 className={dashboardCardTitleClass}>{method.name}</h2>
 					<p className='text-xs text-gray-500'>{method.network}</p>
 				</div>
 			</div>
@@ -464,7 +464,7 @@ function StepSendPayment({
 	return (
 		<div className='space-y-5'>
 			<div>
-				<h2 className='text-xl font-semibold text-white'>Send payment</h2>
+				<h2 className={dashboardModalTitleClass}>Send payment</h2>
 				<p className='mt-1 text-sm text-gray-400'>
 					Transfer exactly{' '}
 					<span className='font-medium text-white'>
@@ -549,7 +549,7 @@ function SuccessView({
 			<div className='mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20'>
 				<Check className='h-8 w-8 text-emerald-400' />
 			</div>
-			<h2 className='text-xl font-semibold text-white'>Deposit submitted</h2>
+			<h2 className={dashboardModalTitleClass}>Deposit submitted</h2>
 			<p className='mt-2 max-w-xs text-sm text-gray-400'>
 				Your ${formatUsd(amount)} {method.name} deposit is pending
 				confirmation. You&apos;ll receive an email once it&apos;s approved.

@@ -19,6 +19,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { resetPassword } from '@/actions/auth/resetPassword';
 import { toast } from 'sonner';
+import { authPageTitleClass } from '@/lib/userFormStyles';
 import { Spinner } from '@/components/ui/spinner';
 
 export const ResetPasswordForm = ({ id }: { id: string }) => {
@@ -56,7 +57,7 @@ export const ResetPasswordForm = ({ id }: { id: string }) => {
 		<div className='w-full min-h-screen flex items-center justify-center bg-zinc-950 px-4 py-10'>
 			<div className='w-full max-w-md '>
 				<div className='space-y-3 mb-8'>
-					<h1 className='text-3xl font-semibold text-white'>
+					<h1 className={authPageTitleClass}>
 						Reset Password
 					</h1>
 					<p className='text-sm text-gray-400'>

@@ -1,6 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import {
+	dashboardCardTitleClass,
+	dashboardPageTitleClass,
+	dashboardPageWrapClass,
+	dashboardSectionTitleClass,
+	dashboardStatValueLgClass,
+	dashboardSubheadingClass,
+} from '@/lib/userFormStyles';
 import { Info, Link as LinkIcon, Copy, Users } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -32,7 +40,7 @@ const StatBox = ({
 }) => (
 	<div className='rounded-md border border-zinc-700 bg-zinc-800 p-6 space-y-2'>
 		<p className='text-xs uppercase tracking-wide text-gray-400'>{label}</p>
-		<div className='text-4xl font-bold text-white'>{value}</div>
+		<div className={dashboardStatValueLgClass}>{value}</div>
 	</div>
 );
 
@@ -48,7 +56,7 @@ const InfoCallout = ({
 	<div className='rounded-md border border-blue-500/40 bg-blue-950/40 p-6 space-y-3'>
 		<div className='flex items-center gap-3'>
 			{icon}
-			<h3 className='text-lg font-semibold text-white'>{title}</h3>
+			<h3 className={dashboardCardTitleClass}>{title}</h3>
 		</div>
 		<div className='text-blue-300 leading-relaxed'>{children}</div>
 	</div>
@@ -91,9 +99,9 @@ export default function ReferralsClient({
 	};
 
 	return (
-		<div className='space-y-8'>
+		<div className={`${dashboardPageWrapClass} space-y-8`}>
 			<div className='space-y-3'>
-				<h1 className='text-3xl font-bold text-white'>
+				<h1 className={dashboardPageTitleClass}>
 					Refer &amp; climb the ranks
 				</h1>
 				<p className='text-gray-400'>
@@ -138,7 +146,7 @@ export default function ReferralsClient({
 
 			<div className='rounded-md border border-zinc-700 bg-zinc-800 p-6 space-y-4'>
 				<div className='space-y-1'>
-					<h2 className='text-xl font-bold text-white'>
+					<h2 className={dashboardSubheadingClass}>
 						Your referral code
 					</h2>
 					<p className='text-gray-400 text-sm'>
@@ -148,7 +156,7 @@ export default function ReferralsClient({
 				</div>
 
 				<div className='flex items-center justify-between gap-3 rounded-md border border-zinc-700 bg-zinc-900/40 px-4 py-3'>
-					<p className='font-mono text-lg font-semibold tracking-wide text-white'>
+					<p className='font-mono text-base font-semibold tracking-wide text-white sm:text-lg'>
 						{refcode}
 					</p>
 					<button
@@ -164,7 +172,7 @@ export default function ReferralsClient({
 
 			<div className='rounded-md border border-zinc-700 bg-zinc-800 p-6 space-y-4'>
 				<div className='space-y-1'>
-					<h2 className='text-xl font-bold text-white'>
+					<h2 className={dashboardSubheadingClass}>
 						Your referral link
 					</h2>
 					<p className='text-gray-400 text-sm'>
@@ -205,7 +213,7 @@ export default function ReferralsClient({
 			</InfoCallout>
 
 			<div className='space-y-2'>
-				<h2 className='text-2xl font-bold text-white'>
+				<h2 className={dashboardSectionTitleClass}>
 					Your referrals
 				</h2>
 				<p className='text-gray-400 text-sm'>

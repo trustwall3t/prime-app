@@ -19,6 +19,7 @@ import { useTransition, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { signup } from '@/actions/auth/signup';
 import { toast } from 'sonner';
+import { authPageTitleClass } from '@/lib/userFormStyles';
 import { Spinner } from '@/components/ui/spinner';
 
 export const SignupForm = () => {
@@ -78,7 +79,7 @@ export const SignupForm = () => {
 		<div className=' w-full min-h-screen flex items-center justify-center  px-4 py-10'>
 			<div className='w-full   '>
 				<div className='space-y-3 mb-8'>
-					<h1 className='text-3xl font-semibold text-white'>
+					<h1 className={authPageTitleClass}>
 						Create Account
 					</h1>
 					<p className='text-sm text-gray-400'>

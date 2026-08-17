@@ -17,6 +17,10 @@ import { placeTrade } from '@/actions/user/placeTrade';
 import { syncTrades } from '@/actions/user/syncTrade';
 import { refreshAssetPrices } from '@/actions/user/refreshPrices';
 import { roundMoney } from '@/lib/money';
+import {
+	dashboardMoneyClass,
+	dashboardPageTitleClass,
+} from '@/lib/userFormStyles';
 
 const TradingViewWidget = dynamic(() => import('./TradingviewWidget'), {
 	ssr: false,
@@ -321,7 +325,7 @@ const TradingScreen = ({
 						className='h-14 w-14 rounded-md object-contain'
 					/>
 					<div>
-						<h2 className='text-xl font-bold text-white'>
+						<h2 className={dashboardPageTitleClass}>
 							{selectedAsset.symbol}
 						</h2>
 						<p className='text-sm text-gray-400'>
@@ -331,7 +335,7 @@ const TradingScreen = ({
 				</div>
 
 				<div className='text-right'>
-					<p className='text-2xl font-bold text-white'>
+					<p className={`${dashboardStatValueClass} tabular-nums`}>
 						{selectedAsset.price.toFixed(2)}
 					</p>
 					<p

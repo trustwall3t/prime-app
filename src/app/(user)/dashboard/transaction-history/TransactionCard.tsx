@@ -1,4 +1,5 @@
 import React from 'react';
+import { dashboardMoneyClass } from '@/lib/userFormStyles';
 
 // Shared shape + presentational pieces used by AllTransactions,
 // DepositHistory, and WithdrawalHistory. Adjust the field names here
@@ -121,7 +122,7 @@ export const TransactionCard = ({
 
 		<div className='flex items-center justify-between border-t border-dashed border-zinc-700 pt-4'>
 			<p className='text-gray-400'>Amount</p>
-			<p className='text-lg font-semibold text-white'>
+			<p className={dashboardMoneyClass}>
 				{formatAmount(transaction.amount)}
 			</p>
 		</div>

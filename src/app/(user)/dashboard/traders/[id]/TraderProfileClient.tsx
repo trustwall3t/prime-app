@@ -9,6 +9,11 @@ import {
 	startCopyTrading,
 	stopCopyTrading,
 } from '@/actions/user/copyTrading';
+import {
+	dashboardMoneyClass,
+	dashboardPageTitleClass,
+	dashboardPageWrapClass,
+} from '@/lib/userFormStyles';
 
 const ALLOCATION_OPTIONS = [10, 25, 50, 75, 100];
 
@@ -22,7 +27,7 @@ function formatCount(n: number): string {
 
 const StatBox = ({ value, label }: { value: string; label: string }) => (
 	<div className='rounded-md border border-zinc-700 bg-zinc-900/40 p-4 text-center'>
-		<p className='text-lg font-bold text-white'>{value}</p>
+		<p className={dashboardMoneyClass}>{value}</p>
 		<p className='mt-1 text-xs uppercase tracking-wide text-gray-400'>
 			{label}
 		</p>
@@ -118,7 +123,7 @@ export default function TraderProfileClient({
 	const estimatedStake = Math.round(walletBalance * (allocation / 100) * 100) / 100;
 
 	return (
-		<div className='space-y-6'>
+		<div className={dashboardPageWrapClass}>
 			<button
 				type='button'
 				onClick={() => router.push('/dashboard/traders')}
@@ -130,10 +135,10 @@ export default function TraderProfileClient({
 
 			<div className='rounded-md border border-zinc-700 bg-zinc-800 p-2 space-y-6'>
 				<div className='flex flex-col items-center space-y-3 text-center px-4 pt-4'>
-					<div className='flex h-20 w-20 items-center justify-center rounded-xl bg-zinc-700 text-2xl font-semibold text-white'>
+					<div className='flex h-16 w-16 items-center justify-center rounded-xl bg-zinc-700 text-xl font-semibold text-white sm:h-20 sm:w-20 sm:text-2xl'>
 						{initialsFromName(trader.name)}
 					</div>
-					<h1 className='text-2xl font-bold text-white'>{trader.name}</h1>
+					<h1 className={dashboardPageTitleClass}>{trader.name}</h1>
 					<span className='rounded-full bg-emerald-900/60 px-3 py-1 text-sm font-medium text-emerald-300'>
 						{trader.marketType === 'CRYPTO' ? 'Crypto' : 'Stocks'}
 					</span>

@@ -121,11 +121,11 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
   html {
-    @apply bg-zinc-950;
+    @apply bg-zinc-950 overflow-x-hidden;
+  }
+  body {
+    @apply bg-background text-foreground overflow-x-hidden;
   }
   [data-slot='sidebar-container'],
   [data-slot='sidebar-inner'],
