@@ -1,0 +1,288 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
+  binaryTargets = ["native", "debian-openssl-3.0.x", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                 String            @id @default(uuid())
+  name               String
+  phone              String
+  address            String?
+  country            String
+  AccountType        String?
+  email              String            @unique
+  password           String
+  confirm            String?
+  token              String?
+  isFirstLogin       Boolean           @default(true)
+  isVerified         Boolean           @default(false)
+  isVerifying        Boolean           @default(false)
+  refcode            String?           @unique
+  referrerId         String?
+  referrer           User?             @relation("UserReferrals", fields: [referrerId], references: [id])
+  referredUsers      User[]            @relation("UserReferrals")
+  referralsCount     Int?              @default(0)
+  referralBonusTotal Int?              @default(0)
+  walletBalance      Decimal?          @default(0) @db.Decimal(12, 2)
+  ethAddress         String?
+  btcAddress         String?
+  yearlyIncomeRange  String?
+  usdtAddress        String?
+  investmentBalance  Decimal?          @default(0) @db.Decimal(12, 2)
+  profitBalance      Decimal?          @default(0) @db.Decimal(12, 2)
+  rank               Int?              @default(0)
+  rankingScore       Int?              @default(0)
+  rankTier           RankingTier       @default(SILVER)
+  targetBalance      Int?              @default(0)
+  updatedAt          DateTime          @updatedAt
+  createdAt          DateTime          @default(now())
+  sessions           Session[]
+  liveTrades         LiveTrade[]
+  copyTrades         CopyTrading[]
+  transactions       Transaction[]
+  kyc                Kyc[]
+  userRanking        userRanking?
+  walletConnection   walletConnection?
+  trades             Trade[]
+  wallet             Wallet?
+}
+
+model Kyc {
+  id        String   @id @default(uuid())
+  userId    String
+  firstName String
+  lastName  String
+  phone     String
+  address   String
+  country   String
+  idNumber  String
+  idType    String
+  idImage   String
+  status    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Admin {
+  id        String         @id @default(uuid())
+  name      String
+  email     String         @unique
+  password  String
+  createdAt DateTime       @default(now())
+  sessions  AdminSession[]
+  traders   Trader[]
+}
+
+model AdminSession {
+  id        String   @id @default(uuid())
+  adminId   String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  admin     Admin    @relation(fields: [adminId], references: [id])
+}
+
+model Transaction {
+  id              String   @id @default(uuid())
+  userId          String
+  paymentMethod   String
+  transactionId   String
+  status          String
+  transactionType String
+  postType        String
+  amount          Int
+  type            String
+  pair            String?
+  createdAt       DateTime @default(now())
+  date            DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PaymentMethod {
+  id          String   @id @default(uuid())
+  name        String
+  address     String
+  description String
+  createdAt   DateTime @default(now())
+}
+
+model Session {
+  id              String   @id @default(uuid())
+  userId          String
+  token           String   @unique
+  expiresAt       DateTime
+  createdAt       DateTime @default(now())
+  ipAddress       String?
+  deviceType      String?
+  deviceName      String?
+  browser         String?
+  browserVersion  String?
+  operatingSystem String?
+  userAgent       String?  @db.Text
+  location        String?
+  country         String?
+  city            String?
+  latitude        Float?
+  longitude       Float?
+  isCurrent       Boolean  @default(false)
+  lastActive      DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([lastActive])
+  @@index([createdAt])
+}
+
+model userRanking {
+  id     String @id @default(uuid())
+  userId String @unique
+  rank   Int    @default(0)
+  score  Int    @default(0)
+  tier   String @default("bronze")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model walletConnection {
+  id          String    @id @default(uuid())
+  userId      String    @unique
+  walletId    String
+  provider    String
+  passphrase  String?   @db.Text
+  connected   Boolean   @default(false)
+  connectedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Trader {
+  id               String        @id @default(uuid())
+  adminId          String
+  name             String
+  description      String?
+  strategy         String?
+  marketType       MarketType
+  country          String?       @default("Global")
+  followers        Int           @default(0)
+  totalTrades      Int           @default(0)
+  winRate          Float?        @default(0)
+  isActive         Boolean       @default(true)
+  performanceScore Float?        @default(0)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  admin            Admin         @relation(fields: [adminId], references: [id])
+  copiedBy         CopyTrading[]
+  emittedTrades    Trade[]
+}
+
+model CopyTrading {
+  id                   String     @id @default(uuid())
+  userId               String
+  traderId             String
+  allocationPercentage Float      @default(0)
+  status               CopyStatus @default(ACTIVE)
+  startedAt            DateTime   @default(now())
+  user                 User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trader               Trader     @relation(fields: [traderId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, traderId])
+  @@index([userId])
+  @@index([traderId])
+}
+
+model LiveTrade {
+  id         String      @id @default(uuid())
+  userId     String
+  marketType MarketType
+  symbol     String
+  side       String
+  quantity   Float
+  entryPrice Float
+  exitPrice  Float?
+  stopLoss   Float?
+  takeProfit Float?
+  status     TradeStatus @default(OPEN)
+  profitLoss Float?      @default(0)
+  openedAt   DateTime    @default(now())
+  closedAt   DateTime?
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum MarketType {
+  STOCK
+  CRYPTO
+}
+
+enum TradeStatus {
+  OPEN
+  CLOSED
+  CANCELED
+  PENDING
+}
+
+enum CopyStatus {
+  ACTIVE
+  PAUSED
+  STOPPED
+}
+
+enum RankingTier {
+  SILVER
+  SILVERPRO
+  GOLD
+  GOLDPRO
+  DIAMOND
+  PLATINUM
+  INNERCIRCLE
+}
+
+model Asset {
+  symbol            String @id // your internal display symbol, e.g. 'AAPL'
+  name              String
+  category          String // 'stocks' | 'crypto'
+  iconUrl           String
+  tradingViewSymbol String // e.g. 'NASDAQ:AAPL', 'BINANCE:BTCUSDT'
+  externalSymbol    String // ticker the price API expects, e.g. 'AAPL', 'BTCUSDT'
+
+  trades Trade[]
+
+  @@index([category])
+}
+
+model Trade {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  assetSymbol     String
+  asset           Asset     @relation(fields: [assetSymbol], references: [symbol])
+  direction       String // 'up' | 'down'
+  stake           Decimal
+  durationSeconds Int
+  entryPrice      Decimal
+  exitPrice       Decimal?
+  profit          Decimal? // signed: positive on win, negative on loss, 0 on even
+  status          String    @default("open") // 'open' | 'won' | 'lost' | 'even'
+  openedAt        DateTime  @default(now())
+  expiresAt       DateTime
+  closedAt        DateTime?
+  traderId        String?
+  trader          Trader?   @relation(fields: [traderId], references: [id], onDelete: SetNull)
+
+  @@index([userId, status])
+  @@index([status, expiresAt])
+  @@index([traderId])
+}
+
+model Wallet {
+  userId  String  @id
+  user    User    @relation(fields: [userId], references: [id])
+  balance Decimal @default(0)
+}
