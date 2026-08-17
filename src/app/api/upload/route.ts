@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadToCloudinary } from '@/lib/cloudinary';
-import { getSessionUncached } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
 	try {
+		const { getSessionUncached } = await import('@/lib/session');
 		const session = await getSessionUncached();
 		if (!session) {
 			return NextResponse.json(

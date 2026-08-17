@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getSessionUncached } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function GET() {
 	try {
+		const { getSessionUncached } = await import('@/lib/session');
 		const session = await getSessionUncached(false);
 		if (!session) {
 			return NextResponse.json({ user: null }, { status: 401 });

@@ -37,4 +37,13 @@ function getPrismaClient() {
 	return client;
 }
 
-export const db = getPrismaClient();
+/** Lazy client — avoids Prisma init during Next.js build module evaluation. */
+export const db = new Proxy({} as PrismaClient, {
+	get(_target, prop) {
+		const client = getPrismaClient();
+		const value = client[prop as keyof PrismaClient];
+		return typeof value === 'function'
+			? (value as (...args: unknown[]) => unknown).bind(client)
+			: value;
+	},
+});

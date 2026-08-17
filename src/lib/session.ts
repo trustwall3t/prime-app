@@ -94,6 +94,10 @@ export async function createSession(
 }
 
 async function resolveSession(touch = true) {
+	if (!process.env.DATABASE_URL) {
+		return null;
+	}
+
 	const cookieStore = await cookies();
 	const token = cookieStore.get('session')?.value;
 	if (!token) return null;
