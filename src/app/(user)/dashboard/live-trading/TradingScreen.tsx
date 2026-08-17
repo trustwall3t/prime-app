@@ -20,6 +20,7 @@ import { roundMoney } from '@/lib/money';
 import {
 	dashboardMoneyClass,
 	dashboardPageTitleClass,
+	dashboardStatValueClass,
 } from '@/lib/userFormStyles';
 
 const TradingViewWidget = dynamic(() => import('./TradingviewWidget'), {
