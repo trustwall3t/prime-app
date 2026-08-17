@@ -4,7 +4,7 @@ const BRAND_SHORT = 'PMM';
 export function getAppUrl() {
 	return (
 		process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ??
-		'https://app.primemirromarket.com'
+		'https://app.primemirrormarket.com'
 	);
 }
 
