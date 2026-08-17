@@ -147,6 +147,11 @@ async function resolveSession(touch = true) {
 /** Cached per request — dedupes layout + page session reads. */
 export const getSession = cache(async (touch = true) => resolveSession(touch));
 
+/** Use in Route Handlers — React cache must not be used there. */
+export async function getSessionUncached(touch = true) {
+	return resolveSession(touch);
+}
+
 export async function deleteSession() {
 	const cookieStore = await cookies();
 	const token = cookieStore.get('session')?.value;

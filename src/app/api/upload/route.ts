@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadToCloudinary } from '@/lib/cloudinary';
-import { getSession } from '@/lib/session'; // Your auth function
+import { getSessionUncached } from '@/lib/session';
+
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
 	try {
-		// Check authentication
-		const session = await getSession();
+		const session = await getSessionUncached();
 		if (!session) {
 			return NextResponse.json(
 				{ error: 'Unauthorized' },

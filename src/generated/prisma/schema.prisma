@@ -136,9 +136,9 @@ model Session {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, expiresAt])
   @@index([userId])
   @@index([lastActive])
-  @@index([createdAt])
 }
 
 model userRanking {
