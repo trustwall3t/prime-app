@@ -2,7 +2,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'sonner';
 import { Metadata } from 'next';
-import ChatwootWidget from '@/components/chatwootWidget';
+import SiteSupport from '@/components/SiteSupport';
 
 const inter = Inter({
 	subsets: ['latin'],
@@ -33,7 +33,7 @@ export default function RootLayout({
 			<body className={`${inter.className} bg-zinc-950`}>
 				{children}
 				<Toaster richColors closeButton />
-				<ChatwootWidget />
+				<SiteSupport />
 			</body>
 		</html>
 	);

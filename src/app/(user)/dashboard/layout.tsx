@@ -8,9 +8,9 @@ import { redirect } from 'next/navigation';
 import { settleDueTrades } from '@/lib/tradeSettlement';
 import { UserProvider } from '@/lib/context/UserContext';
 import { UserMenu } from './_components/UserMenu';
-import { MailWarning } from 'lucide-react';
 import FirstTimeModal from '@/components/FirstTimeModal';
 import BottomNavBar from './_components/BottomNavBar';
+import KycLayoutBanner from './_components/KycLayoutBanner';
 
 const DashboardLayout = async ({ children }: { children: ReactNode }) => {
 	const session = await getSession();
@@ -48,29 +48,7 @@ const DashboardLayout = async ({ children }: { children: ReactNode }) => {
 						<UserMenu />
 					</div>
 					<div className='mt-16 min-h-[calc(100vh-100px)] max-w-full overflow-x-hidden p-4 pb-28 md:p-10 md:pb-10'>
-						{/* {session.user.kyc?.length === 0 ? (
-							<div className='bg-red-500/20 text-red-500 rounded-md p-5 md:p-6 w-full mb-4 space-y-4'>
-								<p className='text-sm font-medium'>
-									Please complete your KYC to continue trading
-								</p>
-								<Link
-									href='/dashboard/kyc'
-									className='text-sm font-medium bg-red-500 text-white rounded-md p-2 px-4'
-								>
-									Complete KYC
-								</Link>
-							</div>
-						) : (
-							session.user.kyc?.length > 0 &&
-							session.user.kyc[0].status === 'pending' && (
-								<div className='bg-yellow-500/20 text-yellow-500 rounded-md p-5 md:p-6 w-full mb-4 flex items-center gap-x-10'>
-									<MailWarning className='w-4 h-4' />
-									<p className='text-sm font-medium'>
-										Please wait for your KYC to be approved
-									</p>
-								</div>
-							)
-						)} */}
+						<KycLayoutBanner kyc={session.user.kyc ?? []} />
 
 						{children}
 					</div>

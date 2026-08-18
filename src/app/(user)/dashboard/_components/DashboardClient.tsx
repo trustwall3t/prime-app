@@ -125,7 +125,7 @@ const DashboardClient = ({
 							Connect Wallet
 						</div>
 					</div>
-					<div className='mt-5 flex flex-col gap-3 border-y border-gray-500 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-5'>
+					<div className='mt-5 flex  gap-3 border-y border-gray-500 py-4 sm:flex-row sm:items-center justify-between sm:py-5'>
 						<Link
 							href='/dashboard/ranking'
 							className='flex min-w-0 flex-wrap items-center gap-2 transition hover:opacity-80'

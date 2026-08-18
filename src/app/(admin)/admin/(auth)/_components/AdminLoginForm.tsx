@@ -150,7 +150,7 @@ export default function AdminLoginForm() {
 			<p className='mt-6 text-center text-sm text-gray-400'>
 				Back to{' '}
 				<Link
-					href='/'
+					href='https://primemirrormarket.com'
 					className='font-semibold text-blue-400 transition hover:text-blue-300'
 				>
 					main site
