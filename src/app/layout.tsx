@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'sonner';
 import { Metadata } from 'next';
+import SiteTracker from '@/components/SiteTracker';
 import SiteSupport from '@/components/SiteSupport';
 
 const inter = Inter({
@@ -33,6 +34,7 @@ export default function RootLayout({
 			<body className={`${inter.className} bg-zinc-950`}>
 				{children}
 				<Toaster richColors closeButton />
+				<SiteTracker />
 				<SiteSupport />
 			</body>
 		</html>

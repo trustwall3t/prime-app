@@ -1,67 +1,29 @@
 'use client';
 
-import Script from 'next/script';
-
-const SMARTSUPP_KEY =
-	process.env.NEXT_PUBLIC_SMARTSUPP_KEY ??
-	'09b35ca3f427bdf332eef8c55fa11d9d21954042';
-
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '';
 const WHATSAPP_MESSAGE =
 	process.env.NEXT_PUBLIC_WHATSAPP_MESSAGE ??
 	'Hello, I would like to get support from Prime Mirror Market.';
 
-function hideSmartsuppWidget() {
-	if (typeof window === 'undefined') return;
-
-	const smartsupp = (window as Window & { smartsupp?: (...args: unknown[]) => void })
-		.smartsupp;
-
-	if (typeof smartsupp === 'function') {
-		smartsupp('chat:hide');
-	}
-}
-
-/** Smartsupp runs hidden for visitor tracking; WhatsApp is used for live messaging. */
+/** Floating WhatsApp button for live support messaging. */
 export default function SiteSupport() {
 	const whatsappHref = WHATSAPP_NUMBER
 		? `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, '')}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
 		: null;
 
-	return (
-		<>
-			<Script
-				id='smartsupp-tracker'
-				strategy='lazyOnload'
-				dangerouslySetInnerHTML={{
-					__html: `
-            window._smartsupp = window._smartsupp || {};
-            window._smartsupp.key = '${SMARTSUPP_KEY}';
-            window.smartsupp||(function(d) {
-              var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
-              s=d.getElementsByTagName('script')[0];c=d.createElement('script');
-              c.type='text/javascript';c.charset='utf-8';c.async=true;
-              c.onload=function(){ smartsupp('chat:hide'); };
-              c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
-            })(document);
-          `,
-				}}
-				onLoad={hideSmartsuppWidget}
-			/>
+	if (!whatsappHref) return null;
 
-			{whatsappHref && (
-				<a
-					href={whatsappHref}
-					target='_blank'
-					rel='noopener noreferrer'
-					className='fixed bottom-28 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105 hover:bg-[#20bd5a] active:scale-95 sm:bottom-6 sm:left-auto sm:right-6 sm:h-14 sm:w-14'
-					aria-label='Chat on WhatsApp'
-					title='Chat on WhatsApp'
-				>
-					<WhatsAppIcon />
-				</a>
-			)}
-		</>
+	return (
+		<a
+			href={whatsappHref}
+			target='_blank'
+			rel='noopener noreferrer'
+			className='fixed bottom-28 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105 hover:bg-[#20bd5a] active:scale-95 sm:bottom-6 sm:left-auto sm:right-6 sm:h-14 sm:w-14'
+			aria-label='Chat on WhatsApp'
+			title='Chat on WhatsApp'
+		>
+			<WhatsAppIcon />
+		</a>
 	);
 }
 

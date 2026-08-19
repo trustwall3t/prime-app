@@ -127,13 +127,6 @@
   body {
     @apply bg-background text-foreground overflow-x-hidden;
   }
-  /* Smartsupp: tracking only — messaging is via WhatsApp */
-  #smartsupp-widget-container,
-  iframe#smartsupp-widget-iframe {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
   [data-slot='sidebar-container'],
   [data-slot='sidebar-inner'],
   [data-slot='sidebar-gap'],
