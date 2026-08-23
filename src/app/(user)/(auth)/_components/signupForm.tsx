@@ -133,13 +133,13 @@ export const SignupForm = () => {
 							)}
 						/>
 
-						<div className='grid grid-cols-2 gap-x-4'>
+						<div className='grid sm:grid-cols-2 gap-4'>
 							<FormField
 								control={form.control}
 								name='country'
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel className='text-sm text-gray-300'>
+										<FormLabel className='text-gray-300'>
 											Country
 										</FormLabel>
 										<FormControl>
