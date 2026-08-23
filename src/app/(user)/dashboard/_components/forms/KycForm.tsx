@@ -9,6 +9,7 @@ import {
 	FormItem,
 	FormLabel,
 	FormControl,
+	FormMessage,
 } from '@/components/ui/form';
 import { z } from 'zod';
 import { Input } from '@/components/ui/input';
@@ -24,6 +25,7 @@ import { createKyc } from '@/actions/ky';
 import { toast } from 'sonner';
 import { Loader } from '@/components/Loader';
 import { uploadFile } from '@/lib/uploadfile';
+import CountrySelect from '@/components/CountrySelect';
 
 // Shared dark-theme input styling so every field matches the modal design.
 const inputClassName =
@@ -215,13 +217,15 @@ const KycForm = ({ onSubmitted }: KycFormProps) => {
 								Country
 							</FormLabel>
 							<FormControl>
-								<Input
-									{...field}
-									placeholder='Enter your country'
+								<CountrySelect
+									value={field.value}
+									onChange={field.onChange}
 									disabled={isLoading}
-									className={inputClassName}
+									triggerClassName={inputClassName}
+									contentClassName='border-zinc-700 bg-zinc-800 text-white'
 								/>
 							</FormControl>
+							<FormMessage className='text-red-400 text-xs' />
 						</FormItem>
 					)}
 				/>

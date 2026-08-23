@@ -7,6 +7,7 @@ import {
 	FormItem,
 	FormLabel,
 	FormControl,
+	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Form } from '@/components/ui/form';
@@ -21,6 +22,7 @@ import {
 	userLabelClass,
 	userPrimaryButtonClass,
 } from '@/lib/userFormStyles';
+import CountrySelect from '@/components/CountrySelect';
 
 const UpdateProfile = () => {
 	const { user } = useUser();
@@ -153,12 +155,14 @@ const UpdateProfile = () => {
 									Country
 								</FormLabel>
 								<FormControl>
-									<Input
-										{...field}
-										className={userInputClass}
-										placeholder='Enter your country'
+									<CountrySelect
+										value={field.value}
+										onChange={field.onChange}
+										triggerClassName={userInputClass}
+										contentClassName='border-zinc-800 bg-zinc-900 text-white'
 									/>
 								</FormControl>
+								<FormMessage className='text-red-400 text-xs' />
 							</FormItem>
 						)}
 					/>

@@ -7,7 +7,7 @@ import {
 	TableRow,
 } from '@/components/ui/table';
 import { XCircleIcon, PencilIcon, EyeIcon } from 'lucide-react';
-import { deleteUser, getAllUsers } from '@/actions/admin/users';
+import { deleteUserAction, getAllUsers } from '@/actions/admin/users';
 import Link from 'next/link';
 import {
 	AdminIconButton,
@@ -84,12 +84,7 @@ const Users = async () => {
 										>
 											<PencilIcon className='h-4 w-4' />
 										</AdminIconButton>
-										<form
-											action={async () => {
-												'use server';
-												await deleteUser(user.id);
-											}}
-										>
+										<form action={deleteUserAction.bind(null, user.id)}>
 											<AdminIconButton
 												variant='danger'
 												title='Delete user'

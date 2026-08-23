@@ -6,6 +6,7 @@ import {
 	FormItem,
 	FormLabel,
 	FormDescription,
+	FormMessage,
 } from '@/components/ui/form';
 import { UserRegisterSchema } from '../../../../../schema/UserSchema';
 import { useForm } from 'react-hook-form';
@@ -21,6 +22,7 @@ import { signup } from '@/actions/auth/signup';
 import { toast } from 'sonner';
 import { authPageTitleClass } from '@/lib/userFormStyles';
 import { Spinner } from '@/components/ui/spinner';
+import CountrySelect from '@/components/CountrySelect';
 
 export const SignupForm = () => {
 	const [isPending, startTransition] = useTransition();
@@ -141,13 +143,14 @@ export const SignupForm = () => {
 											Country
 										</FormLabel>
 										<FormControl>
-											<Input
-												{...field}
-												type='text'
-												placeholder='Enter your country'
-												className='bg-zinc-900 border border-zinc-800 text-white placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-500 rounded-lg'
+											<CountrySelect
+												value={field.value}
+												onChange={field.onChange}
+												triggerClassName='bg-zinc-900 border border-zinc-800 text-white focus:border-blue-500 focus:ring-blue-500 rounded-lg h-10'
+												contentClassName='border-zinc-800 bg-zinc-900 text-white'
 											/>
 										</FormControl>
+										<FormMessage className='text-red-400 text-xs' />
 									</FormItem>
 								)}
 							/>

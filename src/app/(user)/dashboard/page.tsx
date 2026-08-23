@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { db } from '@/lib/db';
 import { buildRankingView, getRankMetrics } from '@/lib/ranking';
 import { getUserDashboardFinancials } from '@/actions/user/dashboardStats';
+import { loadTradingAssetsWithPrices } from '@/actions/user/refreshPrices';
 import DashboardClient from './_components/DashboardClient';
 import { dashboardPageWrapClass } from '@/lib/userFormStyles';
 
@@ -15,7 +16,7 @@ const DashboardPage = async () => {
 
 	const user = session.user;
 
-	const [metrics, copies, financials] = await Promise.all([
+	const [metrics, copies, financials, marketAssets] = await Promise.all([
 		getRankMetrics(user.id),
 		db.copyTrading.findMany({
 			where: {
@@ -35,6 +36,7 @@ const DashboardPage = async () => {
 			take: 5,
 		}),
 		getUserDashboardFinancials(user.id),
+		loadTradingAssetsWithPrices(),
 	]);
 
 	const ranking = buildRankingView(metrics);
@@ -58,6 +60,7 @@ const DashboardPage = async () => {
 				activeCopy={activeCopy}
 				totalWithdrawals={financials.totalWithdrawals}
 				tradeInterest={financials.tradeInterest}
+				marketAssets={marketAssets}
 			/>
 		</div>
 	);

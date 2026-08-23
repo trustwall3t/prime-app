@@ -1,4 +1,20 @@
 import { z } from 'zod';
+import { COUNTRIES } from '@/lib/countries';
+import { ACCOUNT_TYPES, INCOME_RANGES } from '@/lib/profileOptions';
+
+export const countryField = z
+	.string()
+	.min(1, { message: 'Country is required' })
+	.refine((value) => (COUNTRIES as readonly string[]).includes(value), {
+		message: 'Select a valid country',
+	});
+
+export const optionalCountryField = z
+	.string()
+	.optional()
+	.refine((value) => !value || (COUNTRIES as readonly string[]).includes(value), {
+		message: 'Select a valid country',
+	});
 
 export const UserLoginSchema = z.object({
 	email: z.string().email({ message: 'Invalid email address' }),
@@ -15,7 +31,7 @@ export const UserRegisterSchema = z
 			.min(1, { message: 'Confirm password is required' }),
 		fullName: z.string().min(1, { message: 'Full Name is required' }),
 		phoneNumber: z.string().min(1, { message: 'Phone number is required' }),
-		country: z.string().min(1, { message: 'Country is required' }),
+		country: countryField,
 		referralCode: z.string().optional(),
 		agreement: z.boolean().refine((data) => data, {
 			message: 'You must agree to the terms and conditions',
@@ -51,12 +67,22 @@ export const FirstTimeProfileSchema = z.object({
 	firstName: z.string().min(1, { message: 'First name is required' }),
 	lastName: z.string().optional(),
 	address: z.string().min(1, { message: 'Address is required' }),
-	country: z.string().min(1, { message: 'Country is required' }),
-	yearlyIncomeRange: z.string().optional(),
-	AccountType: z.string().optional(),
-	ethAddress: z.string().optional(),
-	btcAddress: z.string().optional(),
-	usdtAddress: z.string().optional(),
+	yearlyIncomeRange: z
+		.string()
+		.optional()
+		.refine(
+			(value) =>
+				!value || (INCOME_RANGES as readonly string[]).includes(value),
+			{ message: 'Select a valid income range' },
+		),
+	AccountType: z
+		.string()
+		.optional()
+		.refine(
+			(value) =>
+				!value || (ACCOUNT_TYPES as readonly string[]).includes(value),
+			{ message: 'Select a valid account type' },
+		),
 	referralCode: z.string().optional(),
 });
 

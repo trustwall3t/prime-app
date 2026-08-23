@@ -26,7 +26,7 @@ model User {
   isVerifying        Boolean           @default(false)
   refcode            String?           @unique
   referrerId         String?
-  referrer           User?             @relation("UserReferrals", fields: [referrerId], references: [id])
+  referrer           User?             @relation("UserReferrals", fields: [referrerId], references: [id], onDelete: SetNull)
   referredUsers      User[]            @relation("UserReferrals")
   referralsCount     Int?              @default(0)
   referralBonusTotal Int?              @default(0)
@@ -260,7 +260,7 @@ model Asset {
 model Trade {
   id              String    @id @default(cuid())
   userId          String
-  user            User      @relation(fields: [userId], references: [id])
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   assetSymbol     String
   asset           Asset     @relation(fields: [assetSymbol], references: [symbol])
   direction       String // 'up' | 'down'
@@ -283,6 +283,6 @@ model Trade {
 
 model Wallet {
   userId  String  @id
-  user    User    @relation(fields: [userId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   balance Decimal @default(0)
 }

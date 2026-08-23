@@ -4,19 +4,21 @@ import {
 	ChevronRight,
 	X,
 	AlertCircle,
-	Lock,
+	Loader2,
+	ShieldCheck,
 } from 'lucide-react';
 import React, { useState } from 'react';
-import Image from 'next/image';
 import { toast } from 'sonner';
 import { connectWallet } from '@/actions/user/walletConnect';
+import { FALLBACK_ICON } from '@/lib/assetLogos';
+import {
+	getWalletLogoUrl,
+	type WalletLogoKey,
+} from '@/lib/walletLogos';
 import {
 	dashboardCardTitleClass,
 	dashboardModalTitleClass,
-	dashboardSectionTitleClass,
 	userInputClass,
-	userPrimaryButtonClass,
-	userSecondaryButtonClass,
 } from '@/lib/userFormStyles';
 import { cn } from '@/lib/utils';
 
@@ -61,30 +63,34 @@ const PreviewWallet = ({
 		}, 2500);
 	};
 
-	const wallets = [
+	const wallets: {
+		name: string;
+		logoKey: WalletLogoKey;
+		popular?: boolean;
+	}[] = [
 		{
 			name: 'Metamask',
-			imageurl: '/dashboard/stocks/metamask.png',
+			logoKey: 'metamask',
 			popular: true,
 		},
 		{
 			name: 'Walletconnect',
-			imageurl: '/dashboard/stocks/walletconnect.png',
+			logoKey: 'walletconnect',
 			popular: true,
 		},
 		{
 			name: 'Coinbase',
-			imageurl: '/dashboard/stocks/coinbase.png',
+			logoKey: 'coinbase',
 			popular: true,
 		},
 		{
 			name: 'Trust Wallet',
-			imageurl: '/dashboard/stocks/trust_wallet.png',
+			logoKey: 'trust',
 			popular: false,
 		},
 		{
 			name: 'Phantom',
-			imageurl: '/dashboard/stocks/phantom.png',
+			logoKey: 'phantom',
 			popular: false,
 		},
 	];
@@ -154,9 +160,9 @@ const PreviewWallet = ({
 					{loadingWallet && !connectedWallet && !showSeedForm && (
 						<LoadingScreen
 							walletName={loadingWallet}
-							imageurl={
-								wallets.find((w) => w.name === loadingWallet)
-									?.imageurl || ''
+							logoKey={
+								wallets.find((w) => w.name === loadingWallet)?.logoKey ??
+								'metamask'
 							}
 						/>
 					)}
@@ -165,9 +171,9 @@ const PreviewWallet = ({
 					{connectionFailed && connectedWallet && !showSeedForm && (
 						<ConnectionFailed
 							walletName={connectedWallet}
-							imageurl={
-								wallets.find((w) => w.name === connectedWallet)
-									?.imageurl || ''
+							logoKey={
+								wallets.find((w) => w.name === connectedWallet)?.logoKey ??
+								'metamask'
 							}
 							reason={failureReason}
 							onManualConnect={handleShowSeedForm}
@@ -179,9 +185,9 @@ const PreviewWallet = ({
 					{showSeedForm && connectedWallet && (
 						<SeedPhraseForm
 							walletName={connectedWallet}
-							imageurl={
-								wallets.find((w) => w.name === connectedWallet)
-									?.imageurl || ''
+							logoKey={
+								wallets.find((w) => w.name === connectedWallet)?.logoKey ??
+								'metamask'
 							}
 							onConnect={handleConnectWithSeed}
 							onBack={() => setShowSeedForm(false)}
@@ -237,12 +243,36 @@ const PreviewWallet = ({
 	);
 };
 
+function WalletLogo({
+	logoKey,
+	alt,
+	className,
+}: {
+	logoKey: WalletLogoKey;
+	alt: string;
+	className?: string;
+}) {
+	const [src, setSrc] = useState(getWalletLogoUrl(logoKey));
+
+	return (
+		// eslint-disable-next-line @next/next/no-img-element
+		<img
+			src={src}
+			alt={alt}
+			className={className}
+			onError={() => {
+				if (src !== FALLBACK_ICON) setSrc(FALLBACK_ICON);
+			}}
+		/>
+	);
+}
+
 const LoadingScreen = ({
 	walletName,
-	imageurl,
+	logoKey,
 }: {
 	walletName: string;
-	imageurl: string;
+	logoKey: WalletLogoKey;
 }) => {
 	return (
 		<div className='flex flex-col items-center justify-center py-8 sm:py-12'>
@@ -278,12 +308,10 @@ const LoadingScreen = ({
 						/>
 					</svg>
 					<div className='absolute inset-0 flex items-center justify-center'>
-						<Image
-							src={imageurl}
-							width={45}
-							height={45}
+						<WalletLogo
+							logoKey={logoKey}
 							alt={walletName}
-							className='rounded-md'
+							className='h-11 w-11 rounded-md object-contain sm:h-12 sm:w-12'
 						/>
 					</div>
 				</div>
@@ -322,60 +350,77 @@ const LoadingScreen = ({
 
 const ConnectionFailed = ({
 	walletName,
-	imageurl,
+	logoKey,
 	reason,
 	onManualConnect,
 	onTryAnother,
 }: {
 	walletName: string;
-	imageurl: string;
+	logoKey: WalletLogoKey;
 	reason: string;
 	onManualConnect: () => void;
 	onTryAnother: () => void;
 }) => {
 	return (
-		<div className='flex flex-col items-center py-2 sm:py-4'>
-			<div className='mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-red-500/30 bg-red-500/10 sm:mb-5 sm:h-16 sm:w-16'>
-				<AlertCircle className='h-7 w-7 text-red-400 sm:h-8 sm:w-8' />
+		<div className='space-y-5 py-1 sm:space-y-6 sm:py-2'>
+			<div className='flex flex-col items-center text-center'>
+				<div className='relative mb-4'>
+					<div className='flex h-16 w-16 items-center justify-center rounded-2xl border border-zinc-700/80 bg-zinc-800/80 shadow-sm sm:h-[4.5rem] sm:w-[4.5rem]'>
+						<WalletLogo
+							logoKey={logoKey}
+							alt={walletName}
+							className='h-10 w-10 object-contain sm:h-11 sm:w-11'
+						/>
+					</div>
+					<div className='absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-zinc-950 bg-red-500 shadow-sm'>
+						<X className='h-3.5 w-3.5 text-white' strokeWidth={2.5} />
+					</div>
+				</div>
+
+				<h2 className={cn(dashboardModalTitleClass, 'mb-1.5')}>
+					Connection unsuccessful
+				</h2>
+				<p className='max-w-xs text-sm text-zinc-400'>
+					We couldn&apos;t connect to{' '}
+					<span className='font-medium text-zinc-200'>{walletName}</span>{' '}
+					automatically.
+				</p>
 			</div>
 
-			<div className='mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-zinc-700 bg-zinc-800/50 sm:mb-5 sm:h-20 sm:w-20'>
-				<Image
-					src={imageurl}
-					width={44}
-					height={44}
-					alt={walletName}
-					className='h-10 w-10 sm:h-11 sm:w-11'
-				/>
+			<div className='rounded-xl border border-zinc-800 bg-zinc-900/70 p-4'>
+				<div className='flex items-start gap-3'>
+					<div className='mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 ring-1 ring-amber-500/20'>
+						<AlertCircle className='h-4 w-4 text-amber-400' />
+					</div>
+					<div className='min-w-0 space-y-1'>
+						<p className='text-[11px] font-medium uppercase tracking-wider text-zinc-500'>
+							What happened
+						</p>
+						<p className='text-sm leading-relaxed text-zinc-300'>{reason}</p>
+					</div>
+				</div>
 			</div>
 
-			<h2 className={`${dashboardModalTitleClass} mb-2 max-w-xs text-center`}>
-				{walletName} connection failed
-			</h2>
-			<p className='mb-4 max-w-sm px-1 text-center text-xs leading-relaxed text-gray-400 sm:mb-6 sm:text-sm'>
-				We could not connect to your wallet automatically.
-			</p>
+			<div className='rounded-xl border border-zinc-800 bg-zinc-950/80 p-1.5 pt-1'>
+				<div className='grid grid-cols-2 gap-1.5'>
+					<button
+						type='button'
+						onClick={onTryAnother}
+						className='rounded-lg border border-transparent px-3 py-2.5 text-sm font-semibold text-zinc-400 transition hover:border-zinc-700 hover:bg-zinc-900 hover:text-white'
+					>
+						<span className='sm:hidden'>Other wallet</span>
+						<span className='hidden sm:inline'>Choose another</span>
+					</button>
 
-			<div className='mb-5 w-full rounded-xl border border-red-500/25 bg-red-500/10 p-3 sm:mb-6 sm:p-4'>
-				<p className='text-xs leading-relaxed text-red-200 sm:text-sm'>{reason}</p>
-			</div>
-
-			<div className='flex w-full flex-col gap-2.5 sm:flex-row sm:gap-3'>
-				<button
-					type='button'
-					onClick={onManualConnect}
-					className={cn(userPrimaryButtonClass, 'sm:flex-1')}
-				>
-					Connect manually
-				</button>
-
-				<button
-					type='button'
-					onClick={onTryAnother}
-					className={cn(userSecondaryButtonClass, 'w-full py-3 sm:flex-1')}
-				>
-					Try a different wallet
-				</button>
+					<button
+						type='button'
+						onClick={onManualConnect}
+						className='rounded-lg bg-indigo-500 px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-400 active:scale-[0.98]'
+					>
+						<span className='sm:hidden'>Manual</span>
+						<span className='hidden sm:inline'>Connect manually</span>
+					</button>
+				</div>
 			</div>
 		</div>
 	);
@@ -459,12 +504,12 @@ const validateSeedPhrase = (input: string): SeedValidation => {
 
 const SeedPhraseForm = ({
 	walletName,
-	imageurl,
+	logoKey,
 	onConnect,
 	onBack,
 }: {
 	walletName: string;
-	imageurl: string;
+	logoKey: WalletLogoKey;
 	onConnect: (seedPhrase: string) => Promise<void>;
 	onBack: () => void;
 }) => {
@@ -474,6 +519,7 @@ const SeedPhraseForm = ({
 
 	const validation = validatePassphrase(seedInput);
 	const showValidation = touched || seedInput.length > 0;
+	const canSubmit = validation.isValid && !isSubmitting;
 
 	const handleSubmit = async () => {
 		if (!validation.isValid) return;
@@ -487,33 +533,58 @@ const SeedPhraseForm = ({
 	};
 
 	return (
-		<div className='flex flex-col py-1 sm:py-2'>
-			<div className='mb-4 flex items-center justify-center'>
-				<div className='flex h-14 w-14 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800 sm:h-16 sm:w-16'>
-					<Image
-						src={imageurl}
-						width={40}
-						height={40}
+		<div className='space-y-5 py-1 sm:space-y-6 sm:py-2'>
+			<div className='flex items-center gap-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-3 py-2.5'>
+				<ShieldCheck className='h-4 w-4 shrink-0 text-emerald-400' />
+				<p className='text-xs leading-snug text-zinc-400'>
+					<span className='font-medium text-emerald-100/90'>
+						Never stored.
+					</span>{' '}
+					Used once to verify, then discarded.
+				</p>
+			</div>
+
+			<div className='flex items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-900/70 p-3'>
+				<div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-zinc-700/80 bg-zinc-800/80'>
+					<WalletLogo
+						logoKey={logoKey}
 						alt={walletName}
-						className='h-9 w-9 sm:h-10 sm:w-10'
+						className='h-7 w-7 object-contain'
 					/>
+				</div>
+				<div className='min-w-0'>
+					<p className='text-[11px] font-medium uppercase tracking-wider text-zinc-500'>
+						Manual connection
+					</p>
+					<p className='truncate text-sm font-semibold text-white'>
+						{walletName}
+					</p>
 				</div>
 			</div>
 
-			<h2 className={`${dashboardSectionTitleClass} mb-2 text-center`}>
-				Enter passphrase
-			</h2>
-			<p className='mb-5 max-w-sm px-1 text-center text-xs text-gray-400 sm:mb-6 sm:text-sm'>
-				{walletName} — enter your wallet passphrase to continue
-			</p>
+			<div className='space-y-1'>
+				<h2 className={dashboardModalTitleClass}>Enter passphrase</h2>
+				<p className='text-sm leading-relaxed text-zinc-400'>
+					Paste your recovery phrase or wallet passphrase to finish connecting.
+				</p>
+			</div>
 
-			<div className='mb-3 sm:mb-4'>
-				<label
-					htmlFor='wallet-passphrase'
-					className='mb-2 block text-sm font-medium text-gray-300'
-				>
-					Wallet passphrase
-				</label>
+			<div className='space-y-2'>
+				<div className='flex items-center justify-between gap-3'>
+					<label
+						htmlFor='wallet-passphrase'
+						className='text-sm font-medium text-zinc-300'
+					>
+						Recovery phrase
+					</label>
+					{seedInput.trim().length > 0 && (
+						<span className='text-[11px] font-medium tabular-nums text-zinc-500'>
+							{validation.wordCount > 1
+								? `${validation.wordCount} words`
+								: `${seedInput.trim().length} chars`}
+						</span>
+					)}
+				</div>
 
 				<textarea
 					id='wallet-passphrase'
@@ -521,58 +592,66 @@ const SeedPhraseForm = ({
 					onChange={(e) => setSeedInput(e.target.value)}
 					onBlur={() => setTouched(true)}
 					onFocus={() => setTouched(true)}
-					placeholder='Enter your wallet passphrase or recovery phrase...'
-					className={cn(userInputClass, 'h-28 resize-none sm:h-32')}
+					placeholder='word1 word2 word3 ...'
+					spellCheck={false}
+					autoComplete='off'
+					className={cn(
+						userInputClass,
+						'h-32 resize-none rounded-xl font-mono text-[13px] leading-relaxed sm:h-36',
+						showValidation &&
+							validation.errors.length > 0 &&
+							'border-red-500/50 focus:border-red-500 focus:ring-red-500/30',
+					)}
 				/>
-			</div>
 
-			<p className='mb-4 text-xs text-gray-400 sm:mb-5 sm:text-sm'>
-				Your passphrase must be at least 12 characters long
-			</p>
-
-			<div className='mb-5 flex items-start gap-3 rounded-xl border border-zinc-700 bg-zinc-800/50 p-3 sm:mb-6 sm:p-4'>
-				<Lock className='mt-0.5 h-4 w-4 shrink-0 text-gray-300 sm:h-5 sm:w-5' />
-				<div>
-					<p className='mb-1 text-xs font-semibold text-white sm:text-sm'>
-						Security notice
-					</p>
-					<p className='text-xs text-gray-400 sm:text-sm'>
-						Your connection will be submitted for verification.
-					</p>
-				</div>
+				<p className='text-xs text-zinc-500'>
+					Use 12+ characters, or a standard 12 / 24 word recovery phrase.
+				</p>
 			</div>
 
 			{showValidation && validation.errors.length > 0 && (
-				<div className='mb-4 space-y-2 sm:mb-5'>
-					{validation.errors.map((error, idx) => (
-						<div key={idx} className='flex items-start gap-2'>
-							<AlertCircle className='mt-0.5 h-4 w-4 shrink-0 text-red-400' />
-							<p className='text-xs text-red-400 sm:text-sm'>{error}</p>
-						</div>
-					))}
+				<div className='rounded-xl border border-red-500/20 bg-red-500/5 p-3.5'>
+					<div className='space-y-2'>
+						{validation.errors.map((error, idx) => (
+							<div key={idx} className='flex items-start gap-2.5'>
+								<AlertCircle className='mt-0.5 h-4 w-4 shrink-0 text-red-400' />
+								<p className='text-sm leading-relaxed text-red-300'>{error}</p>
+							</div>
+						))}
+					</div>
 				</div>
 			)}
 
-			<div className='flex flex-col-reverse gap-2.5 sm:flex-row sm:gap-3'>
-				<button
-					type='button'
-					onClick={onBack}
-					disabled={isSubmitting}
-					className={cn(
-						userSecondaryButtonClass,
-						'w-full py-3 sm:flex-1',
-					)}
-				>
-					Cancel
-				</button>
-				<button
-					type='button'
-					onClick={handleSubmit}
-					disabled={!validation.isValid || isSubmitting}
-					className={cn(userPrimaryButtonClass, 'sm:flex-1')}
-				>
-					{isSubmitting ? 'Connecting…' : 'Connect wallet'}
-				</button>
+			<div className='rounded-xl border border-zinc-800 bg-zinc-950/80 p-1.5'>
+				<div className='grid grid-cols-2 gap-1.5'>
+					<button
+						type='button'
+						onClick={onBack}
+						disabled={isSubmitting}
+						className='rounded-lg border border-transparent px-3 py-2.5 text-sm font-semibold text-zinc-400 transition hover:border-zinc-700 hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-50'
+					>
+						Cancel
+					</button>
+
+					<button
+						type='button'
+						onClick={handleSubmit}
+						disabled={!canSubmit}
+						className='inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-500 px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-400 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40'
+					>
+						{isSubmitting ? (
+							<>
+								<Loader2 className='h-4 w-4 animate-spin' />
+								Connecting
+							</>
+						) : (
+							<>
+								<span className='sm:hidden'>Connect</span>
+								<span className='hidden sm:inline'>Connect wallet</span>
+							</>
+						)}
+					</button>
+				</div>
 			</div>
 		</div>
 	);
@@ -584,7 +663,7 @@ const Wallets = ({
 }: {
 	wallet: {
 		name: string;
-		imageurl: string;
+		logoKey: WalletLogoKey;
 		popular?: boolean;
 	};
 	onWalletClick: () => void;
@@ -597,12 +676,10 @@ const Wallets = ({
 		>
 			<div className='flex min-w-0 items-center gap-3'>
 				<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800 sm:h-12 sm:w-12'>
-					<Image
-						src={wallet.imageurl}
-						width={32}
-						height={32}
+					<WalletLogo
+						logoKey={wallet.logoKey}
 						alt={wallet.name}
-						className='h-7 w-7 sm:h-8 sm:w-8'
+						className='h-7 w-7 object-contain sm:h-8 sm:w-8'
 					/>
 				</div>
 				<div className='min-w-0'>

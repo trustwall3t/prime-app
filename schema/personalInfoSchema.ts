@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalCountryField } from "./UserSchema";
 
 export const PersonalInfoSchema = z.object({
     name: z.string().optional(),
@@ -6,5 +7,5 @@ export const PersonalInfoSchema = z.object({
     phone: z.string().optional(),
     address: z.string().optional(),
     accountType: z.string().optional(),
-    country: z.string().optional(),
+    country: optionalCountryField,
 });

@@ -26,6 +26,8 @@ import { submitFirstTimeProfile } from '@/actions/auth/firstTime';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ChevronLeft, Loader2 } from 'lucide-react';
+import OptionSelect from '@/components/OptionSelect';
+import { ACCOUNT_TYPES, INCOME_RANGES } from '@/lib/profileOptions';
 
 const TOTAL_STEPS = 2;
 
@@ -36,19 +38,20 @@ const STEP_META = [
 	},
 	{
 		title: 'Almost done',
-		description: 'Optional details — skip anything you don’t have yet.',
+		description: 'Add your address and optional account details.',
 	},
 ] as const;
 
 const STEP_ONE_FIELDS = [
 	'firstName',
 	'lastName',
-	'address',
-	'country',
 ] as const satisfies readonly (keyof FirstTimeProfileInput)[];
 
 const inputClass =
 	'h-11 bg-zinc-900/80 border-zinc-700 text-white placeholder:text-zinc-500 focus-visible:ring-indigo-500/40';
+
+const selectTriggerClass = `${inputClass} w-full`;
+const selectContentClass = 'border-zinc-700 bg-zinc-900 text-white';
 
 export default function FirstTimeModal() {
 	const router = useRouter();
@@ -63,12 +66,8 @@ export default function FirstTimeModal() {
 			firstName: '',
 			lastName: '',
 			address: '',
-			country: '',
 			AccountType: '',
 			yearlyIncomeRange: '',
-			btcAddress: '',
-			ethAddress: '',
-			usdtAddress: '',
 			referralCode: '',
 		},
 	});
@@ -218,7 +217,9 @@ export default function FirstTimeModal() {
 											)}
 										/>
 									</div>
-
+								</>
+							) : (
+								<>
 									<FormField
 										control={form.control}
 										name='address'
@@ -242,27 +243,52 @@ export default function FirstTimeModal() {
 
 									<FormField
 										control={form.control}
-										name='country'
+										name='AccountType'
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel className='text-zinc-300 text-xs font-medium'>
-													Country
+													Account type
 												</FormLabel>
 												<FormControl>
-													<Input
-														{...field}
-														placeholder='United States'
-														autoComplete='country-name'
-														className={inputClass}
+													<OptionSelect
+														value={field.value}
+														onChange={field.onChange}
+														options={ACCOUNT_TYPES}
+														placeholder='Select account type'
+														triggerClassName={selectTriggerClass}
+														contentClassName={selectContentClass}
+														aria-label='Account type'
 													/>
 												</FormControl>
 												<FormMessage className='text-red-400 text-xs' />
 											</FormItem>
 										)}
 									/>
-								</>
-							) : (
-								<>
+
+									<FormField
+										control={form.control}
+										name='yearlyIncomeRange'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className='text-zinc-300 text-xs font-medium'>
+													Income range
+												</FormLabel>
+												<FormControl>
+													<OptionSelect
+														value={field.value}
+														onChange={field.onChange}
+														options={INCOME_RANGES}
+														placeholder='Select income range'
+														triggerClassName={selectTriggerClass}
+														contentClassName={selectContentClass}
+														aria-label='Income range'
+													/>
+												</FormControl>
+												<FormMessage className='text-red-400 text-xs' />
+											</FormItem>
+										)}
+									/>
+
 									<FormField
 										control={form.control}
 										name='referralCode'
@@ -281,83 +307,6 @@ export default function FirstTimeModal() {
 																e.target.value.toUpperCase(),
 															)
 														}
-													/>
-												</FormControl>
-											</FormItem>
-										)}
-									/>
-
-									<div className='grid grid-cols-2 gap-3'>
-										<FormField
-											control={form.control}
-											name='AccountType'
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel className='text-zinc-300 text-xs font-medium'>
-														Account type
-													</FormLabel>
-													<FormControl>
-														<Input
-															{...field}
-															placeholder='Individual'
-															className={inputClass}
-														/>
-													</FormControl>
-												</FormItem>
-											)}
-										/>
-										<FormField
-											control={form.control}
-											name='yearlyIncomeRange'
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel className='text-zinc-300 text-xs font-medium'>
-														Income range
-													</FormLabel>
-													<FormControl>
-														<Input
-															{...field}
-															placeholder='$50k–$100k'
-															className={inputClass}
-														/>
-													</FormControl>
-												</FormItem>
-											)}
-										/>
-									</div>
-
-									<FormField
-										control={form.control}
-										name='btcAddress'
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel className='text-zinc-300 text-xs font-medium'>
-													Bitcoin address
-												</FormLabel>
-												<FormControl>
-													<Input
-														{...field}
-														placeholder='Optional'
-														className={inputClass}
-													/>
-												</FormControl>
-											</FormItem>
-										)}
-									/>
-
-									<FormField
-										control={form.control}
-										name='ethAddress'
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel className='text-zinc-300 text-xs font-medium'>
-													Ethereum address
-												</FormLabel>
-												<FormControl>
-													<Input
-														{...field}
-														placeholder='Optional'
-														className={inputClass}
 													/>
 												</FormControl>
 											</FormItem>
