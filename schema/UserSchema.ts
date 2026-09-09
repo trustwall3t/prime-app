@@ -64,8 +64,6 @@ export const verifyEmailSchem = z.object({
 })
 
 export const FirstTimeProfileSchema = z.object({
-	firstName: z.string().min(1, { message: 'First name is required' }),
-	lastName: z.string().optional(),
 	address: z.string().min(1, { message: 'Address is required' }),
 	yearlyIncomeRange: z
 		.string()

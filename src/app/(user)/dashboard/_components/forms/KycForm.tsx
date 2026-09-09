@@ -1,6 +1,6 @@
 'use client';
 import React, { useRef, useTransition, useState } from 'react';
-import { KycSchema } from '../../../../../../schema/KycShema';
+import { KycDocumentSchema } from '../../../../../../schema/KycShema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import {
@@ -25,7 +25,8 @@ import { createKyc } from '@/actions/ky';
 import { toast } from 'sonner';
 import { Loader } from '@/components/Loader';
 import { uploadFile } from '@/lib/uploadfile';
-import CountrySelect from '@/components/CountrySelect';
+import { useUser } from '@/lib/context/UserContext';
+import Link from 'next/link';
 
 // Shared dark-theme input styling so every field matches the modal design.
 const inputClassName =
@@ -38,20 +39,16 @@ interface KycFormProps {
 }
 
 const KycForm = ({ onSubmitted }: KycFormProps) => {
+	const { user } = useUser();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [submitted, setSubmitted] = useState(false);
 	const [isPending, startTransition] = useTransition();
 	const [uploading, setUploading] = useState(false);
 	const [selectedFileName, setSelectedFileName] = useState('');
 
-	const form = useForm<z.infer<typeof KycSchema>>({
-		resolver: zodResolver(KycSchema),
+	const form = useForm<z.infer<typeof KycDocumentSchema>>({
+		resolver: zodResolver(KycDocumentSchema),
 		defaultValues: {
-			firstName: '',
-			lastName: '',
-			phone: '',
-			address: '',
-			country: '',
 			idNumber: '',
 			idType: '',
 			idImage: '',
@@ -66,7 +63,7 @@ const KycForm = ({ onSubmitted }: KycFormProps) => {
 		return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 	};
 
-	async function onSubmit(values: z.infer<typeof KycSchema>) {
+	async function onSubmit(values: z.infer<typeof KycDocumentSchema>) {
 		const fileInput = fileInputRef.current;
 		const file = fileInput?.files?.[0];
 
@@ -81,17 +78,12 @@ const KycForm = ({ onSubmitted }: KycFormProps) => {
 			const imageUrl = await uploadFile(file);
 			setUploading(false);
 
-			// Step 2: Submit form data with image URL to server action
+			// Step 2: Submit ID details; personal data is taken from the account
 			startTransition(async () => {
 				const formData = new FormData();
-				formData.append('firstName', values.firstName);
-				formData.append('lastName', values.lastName);
-				formData.append('phone', values.phone);
-				formData.append('address', values.address);
-				formData.append('country', values.country);
 				formData.append('idNumber', values.idNumber);
 				formData.append('idType', values.idType);
-				formData.append('idImage', imageUrl); // Send URL instead of file
+				formData.append('idImage', imageUrl);
 
 				const result = await createKyc(formData);
 
@@ -121,6 +113,12 @@ const KycForm = ({ onSubmitted }: KycFormProps) => {
 	}
 
 	const isLoading = uploading || isPending;
+	const profileRows = [
+		{ label: 'Name', value: user?.name },
+		{ label: 'Phone', value: user?.phone },
+		{ label: 'Country', value: user?.country },
+		{ label: 'Address', value: user?.address },
+	];
 
 	if (submitted) {
 		return (
@@ -151,103 +149,31 @@ const KycForm = ({ onSubmitted }: KycFormProps) => {
 				className='space-y-6'
 			>
 				{isLoading && <Loader />}
-				<FormField
-					control={form.control}
-					name='firstName'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className={labelClassName}>
-								First name
-							</FormLabel>
-							<FormControl>
-								<Input
-									{...field}
-									placeholder='Enter your first name'
-									disabled={isLoading}
-									className={inputClassName}
-								/>
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name='lastName'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className={labelClassName}>
-								Last name
-							</FormLabel>
-							<FormControl>
-								<Input
-									{...field}
-									placeholder='Enter your last name'
-									disabled={isLoading}
-									className={inputClassName}
-								/>
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name='phone'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className={labelClassName}>
-								Phone
-							</FormLabel>
-							<FormControl>
-								<Input
-									{...field}
-									placeholder='Enter your phone number'
-									disabled={isLoading}
-									className={inputClassName}
-								/>
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name='country'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className={labelClassName}>
-								Country
-							</FormLabel>
-							<FormControl>
-								<CountrySelect
-									value={field.value}
-									onChange={field.onChange}
-									disabled={isLoading}
-									triggerClassName={inputClassName}
-									contentClassName='border-zinc-700 bg-zinc-800 text-white'
-								/>
-							</FormControl>
-							<FormMessage className='text-red-400 text-xs' />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name='address'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className={labelClassName}>
-								Address
-							</FormLabel>
-							<FormControl>
-								<Input
-									{...field}
-									placeholder='Enter your address'
-									disabled={isLoading}
-									className={inputClassName}
-								/>
-							</FormControl>
-						</FormItem>
-					)}
-				/>
+
+				<div className='space-y-3 rounded-md border border-zinc-700 bg-zinc-800/60 p-4'>
+					<p className='text-sm text-gray-400'>
+						We&apos;ll use the personal details already on your
+						account. Update them in{' '}
+						<Link
+							href='/dashboard/settings'
+							className='font-medium text-indigo-400 underline hover:text-indigo-300'
+						>
+							Settings
+						</Link>{' '}
+						if anything has changed.
+					</p>
+					<dl className='grid grid-cols-1 gap-3 text-sm sm:grid-cols-2'>
+						{profileRows.map((row) => (
+							<div key={row.label}>
+								<dt className='text-gray-500'>{row.label}</dt>
+								<dd className='break-words text-white'>
+									{row.value || '—'}
+								</dd>
+							</div>
+						))}
+					</dl>
+				</div>
+
 				<FormField
 					control={form.control}
 					name='idNumber'
@@ -264,6 +190,7 @@ const KycForm = ({ onSubmitted }: KycFormProps) => {
 									className={inputClassName}
 								/>
 							</FormControl>
+							<FormMessage className='text-red-400 text-xs' />
 						</FormItem>
 					)}
 				/>
@@ -299,6 +226,7 @@ const KycForm = ({ onSubmitted }: KycFormProps) => {
 									</SelectContent>
 								</Select>
 							</FormControl>
+							<FormMessage className='text-red-400 text-xs' />
 						</FormItem>
 					)}
 				/>
@@ -383,6 +311,7 @@ const KycForm = ({ onSubmitted }: KycFormProps) => {
 									</div>
 								</div>
 							</FormControl>
+							<FormMessage className='text-red-400 text-xs' />
 						</FormItem>
 					)}
 				/>

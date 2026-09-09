@@ -9,6 +9,7 @@ type User = {
 	phone?: string | null;
 	address?: string | null;
 	accountType?: string | null;
+	AccountType?: string | null;
 	country?: string;
 	btcAddress?: string | null;
 	usdtAddress?: string | null;

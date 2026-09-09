@@ -74,11 +74,10 @@ const KycSection = ({
 			</h2>
 
 			<p className='text-gray-400'>
-				To ensure a secure and trustworthy environment for all our
-				users, we kindly request you to submit your verification
-				documents. Completing this process is quick and easy, and it
-				helps us maintain the integrity of our platform. It only takes a
-				few minutes to complete the verification process.
+				To keep the platform secure, we need a government ID. We already
+				have your personal details from registration, so you only need
+				to submit your verification documents. It only takes a few
+				minutes.
 			</p>
 
 			<span className='inline-block rounded-md bg-red-900/40 px-4 py-2 text-sm font-medium text-red-300'>

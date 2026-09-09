@@ -23,9 +23,17 @@ import {
 	userPrimaryButtonClass,
 } from '@/lib/userFormStyles';
 import CountrySelect from '@/components/CountrySelect';
+import OptionSelect from '@/components/OptionSelect';
+import { ACCOUNT_TYPES } from '@/lib/profileOptions';
 
 const UpdateProfile = () => {
 	const { user } = useUser();
+	const savedAccountTypeRaw = user?.accountType ?? user?.AccountType ?? undefined;
+	const savedAccountType =
+		savedAccountTypeRaw &&
+		(ACCOUNT_TYPES as readonly string[]).includes(savedAccountTypeRaw)
+			? savedAccountTypeRaw
+			: undefined;
 	const [isPending, startTransition] = useTransition();
 	const form = useForm<z.infer<typeof PersonalInfoSchema>>({
 		resolver: zodResolver(PersonalInfoSchema),
@@ -34,7 +42,7 @@ const UpdateProfile = () => {
 			email: user?.email ?? undefined,
 			phone: user?.phone ?? undefined,
 			address: user?.address ?? undefined,
-			accountType: user?.accountType ?? undefined,
+			accountType: savedAccountType,
 			country: user?.country ?? undefined,
 		},
 	});
@@ -137,12 +145,17 @@ const UpdateProfile = () => {
 									Account type
 								</FormLabel>
 								<FormControl>
-									<Input
-										{...field}
-										className={userInputClass}
-										placeholder='Enter your account type'
+									<OptionSelect
+										value={field.value}
+										onChange={field.onChange}
+										options={ACCOUNT_TYPES}
+										placeholder='Select account type'
+										triggerClassName={userInputClass}
+										contentClassName='border-zinc-800 bg-zinc-900 text-white'
+										aria-label='Account type'
 									/>
 								</FormControl>
+								<FormMessage className='text-red-400 text-xs' />
 							</FormItem>
 						)}
 					/>

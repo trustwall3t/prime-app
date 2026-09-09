@@ -15,7 +15,8 @@ const page = async () => {
 				<p className='text-gray-400'>
 					To comply with regulation each participant will have to go
 					through identity verification (KYC/AML) to prevent fraud
-					causes.
+					causes. We use the personal details from your account, so
+					you only need to provide a government ID.
 				</p>
 			</div>
 

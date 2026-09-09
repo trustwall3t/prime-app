@@ -1,11 +1,32 @@
 'use server';
 
-import { KycSchema } from '../../schema/KycShema';
+import { KycDocumentSchema, KycSchema } from '../../schema/KycShema';
 import { db } from '@/lib/db';
 import { getSession } from '@/lib/session';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { revalidatePath } from 'next/cache';
 import { unstable_noStore as noStore } from 'next/cache';
+
+function splitFullName(fullName: string) {
+	const trimmed = fullName.trim();
+	const [firstName, ...rest] = trimmed.split(/\s+/).filter(Boolean);
+	const lastName = rest.join(' ');
+
+	return {
+		firstName: firstName || trimmed,
+		lastName: lastName || firstName || trimmed,
+	};
+}
+
+function firstValidationError(
+	error: { flatten: () => { fieldErrors: Record<string, string[] | undefined> } },
+) {
+	const fieldErrors = error.flatten().fieldErrors;
+	const first = Object.values(fieldErrors).find(
+		(messages) => messages && messages.length > 0,
+	);
+	return first?.[0] ?? 'Invalid KYC details';
+}
 
 export async function createKyc(formData: FormData) {
 	const session = await getSession();
@@ -21,6 +42,18 @@ export async function createKyc(formData: FormData) {
 
 	if (!user) {
 		throw new Error('User not found');
+	}
+
+	if (!user.name?.trim() || !user.phone?.trim() || !user.country?.trim()) {
+		return {
+			error: 'Please complete your profile in Settings before submitting KYC',
+		};
+	}
+
+	if (!user.address?.trim()) {
+		return {
+			error: 'Please add your address in Settings before submitting KYC',
+		};
 	}
 
 	// Handle file upload - idImage can be either a URL string (from form) or a File
@@ -46,24 +79,33 @@ export async function createKyc(formData: FormData) {
 		}
 	}
 
-	const validatedFields = KycSchema.safeParse({
-		firstName: formData.get('firstName'),
-		lastName: formData.get('lastName'),
-		phone: formData.get('phone'),
-		address: formData.get('address'),
-		country: formData.get('country'),
+	const documentFields = KycDocumentSchema.safeParse({
 		idNumber: formData.get('idNumber'),
 		idType: formData.get('idType'),
-		idImage: imageUrl, // Use the uploaded URL instead of the file
+		idImage: imageUrl,
+	});
+
+	if (!documentFields.success) {
+		return { error: firstValidationError(documentFields.error) };
+	}
+
+	const { firstName, lastName } = splitFullName(user.name);
+	const validatedFields = KycSchema.safeParse({
+		firstName,
+		lastName,
+		phone: user.phone,
+		address: user.address,
+		country: user.country,
+		...documentFields.data,
 	});
 
 	if (!validatedFields.success) {
-		return { error: validatedFields.error.flatten().fieldErrors };
+		return { error: firstValidationError(validatedFields.error) };
 	}
 
 	const {
-		firstName,
-		lastName,
+		firstName: kycFirstName,
+		lastName: kycLastName,
 		phone,
 		address,
 		country,
@@ -81,8 +123,8 @@ export async function createKyc(formData: FormData) {
 	}
 	const kyc = await db.kyc.create({
 		data: {
-			firstName,
-			lastName,
+			firstName: kycFirstName,
+			lastName: kycLastName,
 			phone,
 			address,
 			country,
@@ -102,6 +144,7 @@ export async function createKyc(formData: FormData) {
 		return { error: 'Failed to create KYC' };
 	}
 	revalidatePath('/dashboard');
+	revalidatePath('/dashboard/kyc');
 
 	return { success: 'KYC created successfully' };
 }

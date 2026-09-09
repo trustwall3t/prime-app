@@ -26,7 +26,7 @@ export const personalInfoSettings = async (
 			name: validatedFields.data.name,
 			phone: validatedFields.data.phone,
 			address: validatedFields.data.address,
-			AccountType: validatedFields.data.accountType,
+			AccountType: validatedFields.data.accountType || null,
 			country: validatedFields.data.country,
 		},
 	});
