@@ -51,7 +51,6 @@ export const submitFirstTimeProfile = async (
   }
 
   const updateData: Record<string, unknown> = {
-    name: `${validated.data.firstName}${validated.data.lastName ? ' ' + validated.data.lastName : ''}`,
     address: validated.data.address,
     yearlyIncomeRange: validated.data.yearlyIncomeRange,
     AccountType: validated.data.AccountType,
