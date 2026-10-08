@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import {
 	ArrowLeft,
-	ArrowRight,
 	Check,
 	ChevronRight,
 	Clock,
@@ -106,7 +105,7 @@ const DEPOSIT_METHODS: DepositMethod[] = [
 	},
 ];
 
-const STEP_LABELS = ['Select method', 'Enter amount', 'Send payment'];
+const STEP_LABELS = ['Select method', 'Enter amount', 'Make payment'];
 
 function formatUsd(value: number) {
 	return value.toLocaleString('en-US', {
@@ -122,7 +121,6 @@ export default function DepositFlow() {
 		null,
 	);
 	const [amount, setAmount] = useState('');
-	const [transactionHash, setTransactionHash] = useState('');
 	const [copiedAddress, setCopiedAddress] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [submitted, setSubmitted] = useState(false);
@@ -146,12 +144,8 @@ export default function DepositFlow() {
 	}, [amount, numericAmount, minAmount, maxAmount, selectedMethod]);
 
 	const canProceedStep2 = numericAmount > 0 && !amountError;
-	const canSubmit =
-		transactionHash.trim().length >= 8 && selectedMethod && canProceedStep2;
 
-	const progress = submitted
-		? 100
-		: ((step - 1) / (STEP_LABELS.length - 1)) * 100;
+	const progress = ((step - 1) / (STEP_LABELS.length - 1)) * 100;
 
 	const handleSelectMethod = (method: DepositMethod) => {
 		setSelectedMethod(method);
@@ -159,16 +153,13 @@ export default function DepositFlow() {
 	};
 
 	const handleBack = () => {
-		if (step === 1) {
+		if (step === 1 || submitted) {
 			router.push('/dashboard');
 			return;
 		}
 		if (step === 2) {
 			setSelectedMethod(null);
 			setAmount('');
-		}
-		if (step === 3) {
-			setTransactionHash('');
 		}
 		setStep((s) => s - 1);
 	};
@@ -181,7 +172,7 @@ export default function DepositFlow() {
 	};
 
 	const handleSubmit = async () => {
-		if (!selectedMethod || !canSubmit) return;
+		if (!selectedMethod || !canProceedStep2) return;
 
 		setIsSubmitting(true);
 		try {
@@ -197,6 +188,7 @@ export default function DepositFlow() {
 			}
 
 			setSubmitted(true);
+			setStep(3);
 			toast.success('Deposit request submitted successfully');
 		} catch {
 			toast.error('Something went wrong. Please try again.');
@@ -217,7 +209,7 @@ export default function DepositFlow() {
 							className='flex items-center gap-1.5 text-sm text-gray-400 transition hover:text-white'
 						>
 							<ArrowLeft className='h-4 w-4' />
-							{step === 1 ? 'Dashboard' : 'Back'}
+							{step === 1 || submitted ? 'Dashboard' : 'Back'}
 						</button>
 						<Link
 							href='/dashboard'
@@ -228,34 +220,25 @@ export default function DepositFlow() {
 						</Link>
 					</div>
 
-					{!submitted && (
-						<>
-							<div className='mb-2 flex items-center justify-between text-xs text-gray-500'>
-								<span>
-									Step {step} of {STEP_LABELS.length}
-								</span>
-								<span className='text-indigo-400'>
-									{STEP_LABELS[step - 1]}
-								</span>
-							</div>
-							<div className='h-1.5 overflow-hidden rounded-full bg-zinc-800'>
-								<div
-									className='h-full rounded-full bg-indigo-500 transition-all duration-500 ease-out'
-									style={{ width: `${progress}%` }}
-								/>
-							</div>
-						</>
-					)}
+					<div className='mb-2 flex items-center justify-between text-xs text-gray-500'>
+						<span>
+							Step {step} of {STEP_LABELS.length}
+						</span>
+						<span className='text-indigo-400'>
+							{STEP_LABELS[step - 1]}
+						</span>
+					</div>
+					<div className='h-1.5 overflow-hidden rounded-full bg-zinc-800'>
+						<div
+							className='h-full rounded-full bg-indigo-500 transition-all duration-500 ease-out'
+							style={{ width: `${progress}%` }}
+						/>
+					</div>
 				</div>
 
 				{/* Body */}
 				<div className='flex-1 overflow-y-auto px-5 py-6'>
-					{submitted ? (
-						<SuccessView
-							method={selectedMethod!}
-							amount={numericAmount}
-						/>
-					) : step === 1 ? (
+					{step === 1 ? (
 						<StepSelectMethod onSelect={handleSelectMethod} />
 					) : step === 2 ? (
 						<StepEnterAmount
@@ -268,45 +251,27 @@ export default function DepositFlow() {
 						<StepSendPayment
 							method={selectedMethod!}
 							amount={numericAmount}
-							transactionHash={transactionHash}
 							copiedAddress={copiedAddress}
-							onTransactionHashChange={setTransactionHash}
 							onCopyAddress={copyAddress}
 						/>
 					)}
 				</div>
 
 				{/* Footer */}
-				{!submitted && step > 1 && (
+				{!submitted && step === 2 && (
 					<div className='border-t border-zinc-800 px-5 py-4'>
-						{step === 2 && (
-							<button
-								type='button'
-								disabled={!canProceedStep2}
-								onClick={() => setStep(3)}
-								className={cn(
-									userPrimaryButtonClass,
-									'flex items-center justify-center gap-2',
-								)}
-							>
-								Continue to payment
-								<ArrowRight className='h-4 w-4' />
-							</button>
-						)}
-						{step === 3 && (
-							<button
-								type='button'
-								disabled={!canSubmit || isSubmitting}
-								onClick={handleSubmit}
-								className={cn(
-									userPrimaryButtonClass,
-									'flex items-center justify-center gap-2',
-								)}
-							>
-								{isSubmitting ? 'Submitting…' : 'Submit deposit'}
-								{!isSubmitting && <Check className='h-4 w-4' />}
-							</button>
-						)}
+						<button
+							type='button'
+							disabled={!canProceedStep2 || isSubmitting}
+							onClick={handleSubmit}
+							className={cn(
+								userPrimaryButtonClass,
+								'flex items-center justify-center gap-2',
+							)}
+						>
+							{isSubmitting ? 'Submitting…' : 'Submit deposit'}
+							{!isSubmitting && <Check className='h-4 w-4' />}
+						</button>
 					</div>
 				)}
 
@@ -449,29 +414,25 @@ function StepEnterAmount({
 function StepSendPayment({
 	method,
 	amount,
-	transactionHash,
 	copiedAddress,
-	onTransactionHashChange,
 	onCopyAddress,
 }: {
 	method: DepositMethod;
 	amount: number;
-	transactionHash: string;
 	copiedAddress: boolean;
-	onTransactionHashChange: (v: string) => void;
 	onCopyAddress: (address: string) => void;
 }) {
 	return (
 		<div className='space-y-5'>
 			<div>
-				<h2 className={dashboardModalTitleClass}>Send payment</h2>
+				<h2 className={dashboardModalTitleClass}>Deposit request submitted</h2>
 				<p className='mt-1 text-sm text-gray-400'>
-					Transfer exactly{' '}
+					Your request is pending. Transfer exactly{' '}
 					<span className='font-medium text-white'>
 						${formatUsd(amount)}
 					</span>{' '}
-					via {method.name} ({method.network}), then paste your transaction
-					hash.
+					via {method.name} ({method.network}) to the address below to
+					complete your deposit.
 				</p>
 			</div>
 
@@ -507,56 +468,10 @@ function StepSendPayment({
 					) : (
 						<>
 							<Copy className='h-3.5 w-3.5' />
-							Copy address
+						Copy address
 						</>
-					)}
+						)}
 				</button>
-			</div>
-
-			<div className='space-y-2'>
-				<label
-					htmlFor='deposit-tx-hash'
-					className='text-sm font-medium text-gray-300'
-				>
-					Transaction hash
-				</label>
-				<input
-					id='deposit-tx-hash'
-					type='text'
-					value={transactionHash}
-					onChange={(e) => onTransactionHashChange(e.target.value)}
-					placeholder='Paste your transaction hash'
-					className={userInputClass}
-				/>
-				<p className='text-xs text-gray-500'>
-					We&apos;ll verify your payment and credit your account once
-					confirmed.
-				</p>
-			</div>
-		</div>
-	);
-}
-
-function SuccessView({
-	method,
-	amount,
-}: {
-	method: DepositMethod;
-	amount: number;
-}) {
-	return (
-		<div className='flex flex-col items-center py-4 text-center'>
-			<div className='mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20'>
-				<Check className='h-8 w-8 text-emerald-400' />
-			</div>
-			<h2 className={dashboardModalTitleClass}>Deposit submitted</h2>
-			<p className='mt-2 max-w-xs text-sm text-gray-400'>
-				Your ${formatUsd(amount)} {method.name} deposit is pending
-				confirmation. You&apos;ll receive an email once it&apos;s approved.
-			</p>
-			<div className='mt-6 w-full rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 text-left text-sm'>
-				<p className='text-gray-400'>Estimated processing</p>
-				<p className='mt-1 font-medium text-white'>{method.processingTime}</p>
 			</div>
 		</div>
 	);
